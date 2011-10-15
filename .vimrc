@@ -87,3 +87,8 @@ no <SPACE>h <C-w>h
 no <SPACE>t <C-w>j
 no <SPACE>n <C-w>k
 no <SPACE>s <C-w>l
+
+imap <F4> {}<UP>zzo
+imap <F5> {}<UP>zzo
+imap <F6> {});<UP>zzo
+
