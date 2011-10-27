@@ -1,8 +1,9 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-filetype plugin indent on
 syntax on
+filetype off
+filetype plugin indent on
 
 set nocompatible
 set listchars=trail:~,tab:+-
