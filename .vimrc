@@ -5,6 +5,7 @@ syntax on
 filetype off
 filetype plugin indent on
 
+set ttymouse=xterm2
 set nocompatible
 set listchars=trail:~,tab:+-
 set bg=dark
