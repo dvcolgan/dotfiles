@@ -1,30 +1,11 @@
-"filetype off
+call pathogen#runtime_append_all_bundles()
+call pathogen#helptags()
 
-"set rtp+=~/.vim/bundle/vundle/
-"call vundle#rc()
-
-" let Vundle manage Vundle
-" required! 
-"Bundle 'gmarik/vundle'
-
-" My Bundles here:
-"
-" original repos on github
-"Bundle 'tpope/vim-fugitive'
-"Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-"Bundle 'msanders/snipmate.vim'
-"Bundle 'tpope/vim-surround.git'
-" vim-scripts repos
-"Bundle 'L9'
-"Bundle 'FuzzyFinder'
-"Bundle 'rails.vim'
-" non github repos
-"Bundle 'git://git.wincent.com/command-t.git'
-" ...
-
-filetype plugin indent on
 syntax on
+filetype off
+filetype plugin indent on
 
+set ttymouse=xterm2
 set nocompatible
 set listchars=trail:~,tab:+-
 set bg=dark
@@ -50,6 +31,9 @@ set backspace=2
 set textwidth=0
 set hidden
 set ruler
+
+let g:user_zen_expandabbr_key = '<c-e>' 
+let g:use_zen_complete_tag = 1
 
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
