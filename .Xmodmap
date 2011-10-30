@@ -1,0 +1,26 @@
+remove Control = Control_L
+remove Control = Control_R
+remove Mod1 = Alt_L
+remove Mod1 = Alt_R
+remove Mod4 = Super_L
+remove Mod4 = Super_R
+
+keycode 64 = Control_L
+keycode 108 = Control_R
+keycode 133 = Alt_L
+keycode 134 = Super_R
+keycode 37 = Super_L
+keycode 105 = Super_R
+keycode 135 = Alt_R
+
+add Control = Control_L
+add Control = Control_R
+add Mod1 = Alt_L
+add Mod1 = Alt_R
+add Mod4 = Super_L
+add Mod4 = Super_R
+
+remove Lock = Caps_Lock
+keycode 22 = Caps_Lock
+keycode 66 = BackSpace
+add Lock = Caps_Lock
