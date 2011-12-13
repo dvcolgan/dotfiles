@@ -40,6 +40,8 @@ nnoremap <C-y> 3<C-y>
 no <space><space> :wa<cr>
 no ,d !!date +"\%A \%B \%d, \%Y \%r"<cr>
 
+ino # x#<left><backspace><right>
+
 no ,h :nohl<cr>
 
 no  zz
