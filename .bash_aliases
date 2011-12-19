@@ -21,7 +21,7 @@ alias harp='ssh harp@john.cse.taylor.edu'
 alias fharp='sftp harp@john.cse.taylor.edu'
 
 function workonfn {
-    . ~/virtualenvs/$1/bin/activate
+    . ~/projects/$1env/bin/activate
     cd ~/projects/$1
 }
 alias workon='workonfn'
@@ -34,3 +34,4 @@ function punchfn {
 
 alias punch='punchfn'
 
+alias in='cygstart.exe -- /cygdrive/c/Users/dcolgan/Desktop//setup.exe -K http://cygwinports.org/ports.gpg'
