@@ -1,9 +1,0 @@
-[submodule ".vim/bundle/zen-coding"]
-	path = .vim/bundle/zen-coding
-	url = http://github.com/mattn/zencoding-vim.git
-[submodule ".vim/bundle/vim-coffee-script"]
-	path = .vim/bundle/vim-coffee-script
-	url = https://github.com/kchmck/vim-coffee-script.git
-[submodule ".vim/bundle/The-NERD-tree"]
-	path = .vim/bundle/The-NERD-tree
-	url = https://github.com/vim-scripts/The-NERD-tree.git
