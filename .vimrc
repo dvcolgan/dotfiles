@@ -36,9 +36,14 @@ fun! SetupVAM()
         \"github:jeroenbourgois/vim-actionscript", 
         \"github:groenewege/vim-less",
         \"github:kchmck/vim-coffee-script",
+        \"github:pangloss/vim-javascript",
         \"github:kien/ctrlp.vim",
         \"github:nanotech/jellybeans.vim",
-        \"github:jdonaldson/vaxe"
+        \"github:jdonaldson/vaxe",
+        \"github:digitaltoad/vim-jade",
+        \"github:altercation/vim-colors-solarized",
+        \"github:scrooloose/syntastic",
+        \"github:mklabs/grunt.vim"
         \], {'auto_install' : 1})
 endfun
 call SetupVAM()
@@ -56,11 +61,14 @@ let g:ctrlp_working_path_mode = 'w'
 "let g:neocomplcache_enable_at_startup = 1
 
 "let g:vaxe_nme_target = "cpp"
+"
+let g:syntastic_python_checkers = ['flake8']
+let g:syntastic_javascript_checkers = ['jshint']
 
 let g:ctrlp_match_window_bottom = 1
 let g:ctrlp_max_height = 20 
 let g:ctrlp_clear_cache_on_exit = 0
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/bin/*,*.pyc,*.js
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.pyc
 let g:ctrlp_follow_symlinks = 1
 
 set nocompatible " Vim rather than Vi
@@ -83,6 +91,7 @@ set ignorecase
 set tabstop=4		                " tab stops
 set softtabstop=4
 set shiftwidth=4	                " number of spaces to use for each step of (auto)indent
+"set nowritebackup
 
 set shiftround                      " Round indents to multiples of shiftwidth
 
@@ -107,7 +116,7 @@ set hlsearch
 
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
-no <space><space> :wa<cr> :w<cr>
+no <space><space> :w<cr>
 no <leader>d !!date +"\%A \%B \%d, \%Y \%r"<cr>
 no <leader>v :vsp $MYVIMRC<cr>
 no <leader>s :source $MYVIMRC<cr>
@@ -157,7 +166,12 @@ imap <F4> {}<UP>zzo
 imap <F5> {}<UP>zzo
 imap <F6> {});<UP>zzo
 
+map ,f :wa\|:!./manage.py test functional_tests<cr>
+map ,t :wa\|:!make test<cr>
+iab pdb import ipdb; ipdb.set_trace()
+iab cpdb def dispatch(self, request, *args, **kwargs):response = super(ClientUpdateSendTestEmailView, self).dispatch(request, *args, **kwargs)import ipdb; ipdb.set_trace()return response
 
+no ,c :%s#_\(\l\)#\u\1#g<cr>
 
 " TECHNICAL
 set mouse=a
@@ -189,13 +203,3 @@ set guioptions-=mTLlRrb
 
 colorscheme jellybeans
 
-
-
-:python << EOF
-import os
-virtualenv = os.environ.get('VIRTUAL_ENV')
-if virtualenv:
-    activate_this = os.path.join(virtualenv, 'bin', 'activate_this.py')
-    if os.path.exists(activate_this):
-        execfile(activate_this, dict(__file__=activate_this))
-EOF
