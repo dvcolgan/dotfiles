@@ -10,7 +10,7 @@ keycode 108 = Control_R
 keycode 133 = Alt_L
 keycode 134 = Super_R
 keycode 37 = Super_L
-keycode 105 = Super_R
+keycode 105 = Alt_R
 keycode 135 = Alt_R
 
 add Control = Control_L

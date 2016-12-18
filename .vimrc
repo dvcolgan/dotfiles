@@ -1,84 +1,73 @@
-set nocompatible | filetype indent plugin on | syn on
+set nocompatible
+filetype off
 
-fun! EnsureVamIsOnDisk(plugin_root_dir)
-    let vam_autoload_dir = a:plugin_root_dir.'/vim-addon-manager/autoload'
-    if isdirectory(vam_autoload_dir)
-    return 1
-    else
-    if 1 == confirm("Clone VAM into ".a:plugin_root_dir."?","&Y\n&N")
-        call confirm("Remind yourself that most plugins ship with ".
-                    \"documentation (README*, doc/*.txt). It is your ".
-                    \"first source of knowledge. If you can't find ".
-                    \"the info you're looking for in reasonable ".
-                    \"time ask maintainers to improve documentation")
-        call mkdir(a:plugin_root_dir, 'p')
-        execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '.
-                    \       shellescape(a:plugin_root_dir, 1).'/vim-addon-manager'
-        exec 'helptags '.fnameescape(a:plugin_root_dir.'/vim-addon-manager/doc')
-    endif
-    return isdirectory(vam_autoload_dir)
-    endif
-endfun
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
-fun! SetupVAM()
-    let c = get(g:, 'vim_addon_manager', {})
-    let g:vim_addon_manager = c
-    let c.plugin_root_dir = expand('$HOME/.vim/vim-addons')
-    if !EnsureVamIsOnDisk(c.plugin_root_dir)
-    echohl ErrorMsg | echomsg "No VAM found!" | echohl NONE
-    return
-    endif
-    let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+Plugin 'VundleVim/Vundle.vim'
+Plugin 'ap/vim-css-color' 
+"Plugin 'jeroenbourgois/vim-actionscript' 
+Plugin 'groenewege/vim-less'
+"Plugin 'nielsmadan/harlequin'
+"Plugin 'vim-scripts/pyte'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'pangloss/vim-javascript'
+Plugin 'kien/ctrlp.vim'
+Plugin 'nanotech/jellybeans.vim'
+Plugin 'reedes/vim-colors-pencil'
+Plugin 'jdonaldson/vaxe'
+"Plugin 'digitaltoad/vim-jade'
+"Plugin 'altercation/vim-colors-solarized'
+Plugin 'scrooloose/syntastic'
+"Plugin 'mklabs/grunt.vim'
+Plugin 'mxw/vim-jsx'
+"Plugin 'lambdatoast/elm.vim'
+Plugin 'janko-m/vim-test'
+"Plugin 'rust-lang/rust.vim'
+"Plugin 'wavded/vim-stylus'
+"Plugin 'posva/vim-vue'
+Plugin 'plasticboy/vim-markdown'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'Quramy/tsuquyomi'
+Plugin 'Shougo/vimproc.vim'
+Plugin 'clausreinke/typescript-tools.vim'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'SirVer/ultisnips'
+"Plugin 'davidhalter/jedi-vim'
+Plugin 'hynek/vim-python-pep8-indent'
 
-     
-    call vam#ActivateAddons([
-        \"github:ap/vim-css-color", 
-        \"github:jeroenbourgois/vim-actionscript", 
-        \"github:groenewege/vim-less",
-        \"github:kchmck/vim-coffee-script",
-        \"github:pangloss/vim-javascript",
-        \"github:kien/ctrlp.vim",
-        \"github:nanotech/jellybeans.vim",
-        \"github:jdonaldson/vaxe",
-        \"github:digitaltoad/vim-jade",
-        \"github:altercation/vim-colors-solarized",
-        \"github:scrooloose/syntastic",
-        \"github:mklabs/grunt.vim"
-        \], {'auto_install' : 1})
-endfun
-call SetupVAM()
+au BufRead,BufNewFile *.ts  setlocal filetype=typescript
+let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
+let g:vim_markdown_folding_disabled = 1
+call vundle#end()
+filetype plugin indent on
+syntax on
+
+
+
+let g:tsuquyomi_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+let g:tsuquyomi_completion_detail = 1
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-x><c-k>"
+
+"\"github:flowtype/vim-flow",
+
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = 'eslint_d'
+let g:syntastic_python_checkers = ['flake8']
+"let g:javascript_plugin_flow = 1
+let g:jsx_ext_required = 0
+
 
 let mapleader = ","
-
-let g:SuperTabDefaultCompletionType = "<c-x><c-o>"
-let g:SuperTabClosePreviewOnPopupClose = 1
-let g:ctrlp_working_path_mode = 'w'
-
-"if !exists('g:neocomplcache_omni_patterns')
-"    let g:neocomplcache_omni_patterns = {}
-"endif
-"let g:neocomplcache_omni_patterns.haxe = '\v([\]''"]|\w)(\.|\()'
-"let g:neocomplcache_enable_at_startup = 1
-
-"let g:vaxe_nme_target = "cpp"
-"
-let g:syntastic_python_checkers = ['flake8']
-let g:syntastic_javascript_checkers = ['jshint']
-
-let g:ctrlp_match_window_bottom = 1
-let g:ctrlp_max_height = 20 
-let g:ctrlp_clear_cache_on_exit = 0
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*.pyc
-let g:ctrlp_follow_symlinks = 1
-
 set nocompatible " Vim rather than Vi
 set t_Co=256 " force 256 colors in terminal
 
-set bg=dark
 set linebreak
 
 " APPEARANCE
-syntax enable
 set textwidth=0
 set hidden
 set ruler
@@ -91,12 +80,11 @@ set ignorecase
 set tabstop=4		                " tab stops
 set softtabstop=4
 set shiftwidth=4	                " number of spaces to use for each step of (auto)indent
-"set nowritebackup
+set autowriteall
+set nowritebackup
 
 set shiftround                      " Round indents to multiples of shiftwidth
 
-set autoindent
-set smartindent
 set expandtab
 set smarttab
 
@@ -106,25 +94,28 @@ set pastetoggle=<F12>
 
 set history=200
 set undolevels=200
-set ttyfast		                    " smoother output, they claim
+"set ttyfast		                    " smoother output, they claim
 set whichwrap=h,l,~,[,]
 
 set incsearch
 set noerrorbells
 set hlsearch
 
+"nnoremap / /\v
+"cnoremap %s/ %s/\v
 
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
-no <space><space> :w<cr>
+no <space><space> :wa<cr>:w<cr>
 no <leader>d !!date +"\%A \%B \%d, \%Y \%r"<cr>
+no <leader>D !!date +"\%B \%d, \%Y"<cr>
 no <leader>v :vsp $MYVIMRC<cr>
 no <leader>s :source $MYVIMRC<cr>
+"no <leader>u :!./manage.py test intake --nomigrations<cr>
+no <leader>u :!npm test<cr>
 
-no <leader>n :cnext<cr>
-no <leader>p :cprevious<cr>
-
-no <F5> :make<cr>
+"no <leader>n :cnext<cr>
+"no <leader>p :cprevious<cr>
 
 ino # X#
 
@@ -155,23 +146,19 @@ no t j
 no n k
 no s l
 
+
 ino <C-c> <esc>
-no <SPACE> <C-w>
-no <SPACE>h <C-w>h
-no <SPACE>t <C-w>j
-no <SPACE>n <C-w>k
-no <SPACE>s <C-w>l
+    no <SPACE> <C-w>
+    no <SPACE>h <C-w>h
+    no <SPACE>t <C-w>j
+    no <SPACE>n <C-w>k
+    no <SPACE>s <C-w>l
 
 imap <F4> {}<UP>zzo
 imap <F5> {}<UP>zzo
 imap <F6> {});<UP>zzo
 
-map ,f :wa\|:!./manage.py test functional_tests<cr>
-map ,t :wa\|:!make test<cr>
-iab pdb import ipdb; ipdb.set_trace()
-iab cpdb def dispatch(self, request, *args, **kwargs):response = super(ClientUpdateSendTestEmailView, self).dispatch(request, *args, **kwargs)import ipdb; ipdb.set_trace()return response
-
-no ,c :%s#_\(\l\)#\u\1#g<cr>
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git'
 
 " TECHNICAL
 set mouse=a
@@ -179,12 +166,16 @@ set encoding=utf-8
 set fileencoding=utf-8
 set termencoding=utf-8
 
-"au BufRead,BufNewFile *.hx set filetype=haxe
-"au! Syntax haxe source /home/dcolgan/.vim/syntax/haxe.vim
+set autoindent
+set smartindent
+au Filetype yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
+au filetype elm call DisableIndent()
 
-"au BufRead,BufNewFile *.less set filetype=css
-"au BufRead,BufNewFile *.coffee set filetype=coffee
-"au! Syntax coffee source ~/.vim/syntax/coffee.vim
+function! DisableIndent()
+    set autoindent&
+    set cindent&
+    set indentexpr&
+endfunction
 
 
 iab lorem Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -201,5 +192,46 @@ iab tommorrow tomorrow
 set guioptions+=mTLlRrb
 set guioptions-=mTLlRrb
 
-colorscheme jellybeans
+let g:omni_sql_no_default_maps = 1
 
+set term=xterm-256color
+iab pdb import ipdb; ipdb.set_trace()
+
+iab rcc class extends Component {render() {return ();}};
+
+"nnoremap <leader>el :ElmEvalLine<CR>
+"vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
+"nnoremap <leader>em :ElmMakeCurrentFile<CR>
+no <space>l :!love .<cr>
+
+nnoremap <space>r :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
+
+"let test#python#runner = 'djangotest'
+no <leader>t :TestNearest -k -n<cr>
+no <leader>T :TestNearest<cr>
+
+"no <leader>t :!npm test<cr>
+"no <leader>t :!lime test neko<cr>
+
+
+inoremap {<cr> {<cr>}<c-o>O
+inoremap {,<cr> {<cr>},<c-o>O
+inoremap {;<cr> {<cr>};<c-o>O
+inoremap {)<cr> {<cr>})<c-o>O
+inoremap {{<cr> {<cr>});<c-o>O
+
+colorscheme pencil
+set bg=light
+"set bg=dark
+"colorscheme jellybeans
+
+set directory=~/.vim/swap,.
+au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
+"let &statusline .= ' %{ line2byte(line("$")+1)-1 }C'
+"set laststatus=2
+
+no <leader>b :.w! /home/dvcolgan/.current-task<cr>
+no <leader>e ddGp^d0<c-o>zz
+no <leader>B :!date -Iseconds > ~/.start-time<cr>
+no <leader>E :!/home/dvcolgan/bin/end-session<cr>
+no <leader>R :!rm /home/dvcolgan/.sessions-today && touch /home/dvcolgan/.sessions-today<cr>
