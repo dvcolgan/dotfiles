@@ -4,6 +4,7 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+Plugin 'KevinGoodsell/vim-csexact'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'ap/vim-css-color' 
 "Plugin 'jeroenbourgois/vim-actionscript' 
@@ -14,6 +15,7 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kien/ctrlp.vim'
 Plugin 'nanotech/jellybeans.vim'
+Plugin 'w0ng/jellybeans-Xresources.vim'
 Plugin 'reedes/vim-colors-pencil'
 Plugin 'jdonaldson/vaxe'
 "Plugin 'digitaltoad/vim-jade'
@@ -31,8 +33,8 @@ Plugin 'leafgarland/typescript-vim'
 Plugin 'Quramy/tsuquyomi'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'clausreinke/typescript-tools.vim'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
+"Plugin 'Valloric/YouCompleteMe'
+"Plugin 'SirVer/ultisnips'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'hynek/vim-python-pep8-indent'
 
@@ -44,13 +46,12 @@ filetype plugin indent on
 syntax on
 
 
-
 let g:tsuquyomi_disable_quickfix = 1
 let g:syntastic_typescript_checkers = ['tsuquyomi']
 let g:tsuquyomi_completion_detail = 1
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsExpandTrigger="<c-x><c-k>"
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsExpandTrigger="<c-x><c-k>"
 
 "\"github:flowtype/vim-flow",
 
@@ -220,10 +221,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-colorscheme pencil
-set bg=light
-"set bg=dark
-"colorscheme jellybeans
+"colorscheme pencil
+"set bg=light
+set bg=dark
+colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -235,3 +236,7 @@ no <leader>e ddGp^d0<c-o>zz
 no <leader>B :!date -Iseconds > ~/.start-time<cr>
 no <leader>E :!/home/dvcolgan/bin/end-session<cr>
 no <leader>R :!rm /home/dvcolgan/.sessions-today && touch /home/dvcolgan/.sessions-today<cr>
+
+set guifont=Consolas\ Bold\ 13
+
+inoremap <tab> <c-x><c-o>
