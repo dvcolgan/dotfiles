@@ -4,7 +4,8 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'KevinGoodsell/vim-csexact'
+Plugin 'posva/vim-vue'
+Plugin 'sekel/vim-vue-syntastic'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'ap/vim-css-color' 
 "Plugin 'jeroenbourgois/vim-actionscript' 
@@ -15,7 +16,6 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'pangloss/vim-javascript'
 Plugin 'kien/ctrlp.vim'
 Plugin 'nanotech/jellybeans.vim'
-Plugin 'w0ng/jellybeans-Xresources.vim'
 Plugin 'reedes/vim-colors-pencil'
 Plugin 'jdonaldson/vaxe'
 "Plugin 'digitaltoad/vim-jade'
@@ -34,9 +34,10 @@ Plugin 'Quramy/tsuquyomi'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'clausreinke/typescript-tools.vim'
 "Plugin 'Valloric/YouCompleteMe'
-"Plugin 'SirVer/ultisnips'
+Plugin 'SirVer/ultisnips'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'dracula/vim'
 
 au BufRead,BufNewFile *.ts  setlocal filetype=typescript
 let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
@@ -46,20 +47,29 @@ filetype plugin indent on
 syntax on
 
 
-let g:tsuquyomi_disable_quickfix = 1
-let g:syntastic_typescript_checkers = ['tsuquyomi']
-let g:tsuquyomi_completion_detail = 1
 
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsExpandTrigger="<c-x><c-k>"
+"let g:tsuquyomi_disable_quickfix = 1
+"let g:syntastic_typescript_checkers = ['tsuquyomi']
+"let g:tsuquyomi_completion_detail = 1
+
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsExpandTrigger="<c-x><c-k>"
 
 "\"github:flowtype/vim-flow",
 
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exec = 'eslint_d'
 let g:syntastic_python_checkers = ['flake8']
 "let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 0
+
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_javascript_checkers = ['eslint']
+let g:syntastic_javascript_eslint_exec = 'eslint_d'
+
+let g:syntastic_vue_checkers = ['eslint']
+let g:syntastic_vue_eslint_exec = 'eslint_d'
 
 
 let mapleader = ","
@@ -197,6 +207,7 @@ let g:omni_sql_no_default_maps = 1
 
 set term=xterm-256color
 iab pdb import ipdb; ipdb.set_trace()
+iab rdb ((val: any) => { console.log(val); return val; })(
 
 iab rcc class extends Component {render() {return ();}};
 
@@ -210,6 +221,7 @@ nnoremap <space>r :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 "let test#python#runner = 'djangotest'
 no <leader>t :TestNearest -k -n<cr>
 no <leader>T :TestNearest<cr>
+no <leader>t :!npm test<cr>
 
 "no <leader>t :!npm test<cr>
 "no <leader>t :!lime test neko<cr>
@@ -221,10 +233,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-"colorscheme pencil
-"set bg=light
-set bg=dark
-colorscheme jellybeans
+colorscheme pencil
+set bg=light
+"set bg=dark
+"colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -236,7 +248,3 @@ no <leader>e ddGp^d0<c-o>zz
 no <leader>B :!date -Iseconds > ~/.start-time<cr>
 no <leader>E :!/home/dvcolgan/bin/end-session<cr>
 no <leader>R :!rm /home/dvcolgan/.sessions-today && touch /home/dvcolgan/.sessions-today<cr>
-
-set guifont=Consolas\ Bold\ 13
-
-inoremap <tab> <c-x><c-o>
