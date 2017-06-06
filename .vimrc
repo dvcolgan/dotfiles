@@ -4,40 +4,44 @@ filetype off
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
-Plugin 'posva/vim-vue'
-Plugin 'sekel/vim-vue-syntastic'
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'ap/vim-css-color' 
 "Plugin 'jeroenbourgois/vim-actionscript' 
-Plugin 'groenewege/vim-less'
+"Plugin 'groenewege/vim-less'
 "Plugin 'nielsmadan/harlequin'
 "Plugin 'vim-scripts/pyte'
-Plugin 'kchmck/vim-coffee-script'
+"Plugin 'kchmck/vim-coffee-script'
 Plugin 'pangloss/vim-javascript'
+"Plugin 'mxw/vim-jsx'
+
+"Plugin 'jelera/vim-javascript-syntax'
 Plugin 'kien/ctrlp.vim'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'reedes/vim-colors-pencil'
-Plugin 'jdonaldson/vaxe'
+"Plugin 'jdonaldson/vaxe'
 "Plugin 'digitaltoad/vim-jade'
 "Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/syntastic'
 "Plugin 'mklabs/grunt.vim'
-Plugin 'mxw/vim-jsx'
 "Plugin 'lambdatoast/elm.vim'
 Plugin 'janko-m/vim-test'
 "Plugin 'rust-lang/rust.vim'
 "Plugin 'wavded/vim-stylus'
-"Plugin 'posva/vim-vue'
+Plugin 'posva/vim-vue'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'Quramy/tsuquyomi'
 Plugin 'Shougo/vimproc.vim'
-Plugin 'clausreinke/typescript-tools.vim'
+"Plugin 'clausreinke/typescript-tools.vim'
 "Plugin 'Valloric/YouCompleteMe'
 Plugin 'SirVer/ultisnips'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'dracula/vim'
+Plugin 'mattn/emmet-vim'
+"Plugin 'briancollins/vim-jst'
+"Plugin 'flowtype/vim-flow'
+"Plugin 'w0rp/ale'
 
 au BufRead,BufNewFile *.ts  setlocal filetype=typescript
 let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
@@ -46,30 +50,36 @@ call vundle#end()
 filetype plugin indent on
 syntax on
 
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_text_changed = 0
 
-
-"let g:tsuquyomi_disable_quickfix = 1
-"let g:syntastic_typescript_checkers = ['tsuquyomi']
-"let g:tsuquyomi_completion_detail = 1
+let g:tsuquyomi_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+let g:tsuquyomi_completion_detail = 1
 
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsExpandTrigger="<c-x><c-k>"
 
-"\"github:flowtype/vim-flow",
+"let g:syntastic_python_checkers = ['flake8']
 
-let g:syntastic_python_checkers = ['flake8']
-"let g:javascript_plugin_flow = 1
+let g:javascript_plugin_flow = 1
 let g:jsx_ext_required = 0
+"let g:syntastic_javascript_checkers = ['eslint', 'flow']
+"let g:syntastic_javascript_flow_exe = 'flow'
+"let g:syntastic_javascript_eslint_exec = 'eslint_d'
+let g:ale_linters = {
+\   'javascript': ['eslint']
+\}
+let g:flow#enable = 0
 
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_javascript_checkers = ['eslint']
-let g:syntastic_javascript_eslint_exec = 'eslint_d'
-
-let g:syntastic_vue_checkers = ['eslint']
-let g:syntastic_vue_eslint_exec = 'eslint_d'
+"set statusline+=%#warningmsg#
+"set statusline+=%{SyntasticStatuslineFlag()}
+"set statusline+=%*
+"
+"
+"let g:syntastic_vue_checkers = ['eslint']
+"let g:syntastic_vue_eslint_exec = 'eslint_d'
+autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
 
 
 let mapleader = ","
@@ -233,10 +243,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-colorscheme pencil
-set bg=light
-"set bg=dark
-"colorscheme jellybeans
+"colorscheme pencil
+"set bg=light
+set bg=dark
+colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
