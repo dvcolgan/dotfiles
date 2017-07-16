@@ -229,9 +229,9 @@ no <space>l :!love .<cr>
 nnoremap <space>r :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 "let test#python#runner = 'djangotest'
-no <leader>t :TestNearest -k -n<cr>
-no <leader>T :TestNearest<cr>
-no <leader>t :!npm test<cr>
+no <leader>t :TestNearest<cr>
+"no <leader>T :TestNearest<cr>
+"no <leader>t :!npm test<cr>
 
 "no <leader>t :!npm test<cr>
 "no <leader>t :!lime test neko<cr>
@@ -243,10 +243,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-"colorscheme pencil
-"set bg=light
-set bg=dark
-colorscheme jellybeans
+colorscheme pencil
+set bg=light
+"set bg=dark
+"colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
