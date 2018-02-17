@@ -5,50 +5,48 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'ap/vim-css-color' 
-"Plugin 'davidhalter/jedi-vim'
-"Plugin 'jeroenbourgois/vim-actionscript' 
-"Plugin 'groenewege/vim-less'
-"Plugin 'nielsmadan/harlequin'
-"Plugin 'vim-scripts/pyte'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'pangloss/vim-javascript'
-Plugin 'mxw/vim-jsx'
-"Plugin 'digitaltoad/vim-pug'
 
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'kien/ctrlp.vim'
+" Colors
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'reedes/vim-colors-pencil'
-"Plugin 'jdonaldson/vaxe'
-"Plugin 'digitaltoad/vim-jade'
-"Plugin 'altercation/vim-colors-solarized'
-"Plugin 'scrooloose/syntastic'
+
+" IDE things
+Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
-"Plugin 'mklabs/grunt.vim'
-"Plugin 'lambdatoast/elm.vim'
 Plugin 'janko-m/vim-test'
-"Plugin 'rust-lang/rust.vim'
-Plugin 'wavded/vim-stylus'
-Plugin 'posva/vim-vue'
-Plugin 'plasticboy/vim-markdown'
-"Plugin 'leafgarland/typescript-vim'
-"Plugin 'Quramy/tsuquyomi'
-"Plugin 'Shougo/vimproc.vim'
-"Plugin 'clausreinke/typescript-tools.vim'
-"Plugin 'Valloric/YouCompleteMe'
-"Plugin 'SirVer/ultisnips'
-"Plugin 'davidhalter/jedi-vim'
-Plugin 'hynek/vim-python-pep8-indent'
-Plugin 'dracula/vim'
-Plugin 'mattn/emmet-vim'
-"Plugin 'briancollins/vim-jst'
-"Plugin 'flowtype/vim-flow'
 Plugin 'w0rp/ale'
-Plugin 'niftylettuce/vim-jinja'
+Plugin 'Shougo/deoplete.nvim'
+
+" Javascript
+"Plugin 'pangloss/vim-javascript'
+"Plugin 'othree/yajs.vim'
+"Plugin 'othree/es.next.syntax.vim'
+"Plugin 'mxw/vim-jsx'
+Plugin 'chemzqm/vim-jsx-improve'
+Plugin 'posva/vim-vue'
+
+" HTML and CSS
+Plugin 'ap/vim-css-color' 
+Plugin 'mattn/emmet-vim'
+
+" Markdown
+Plugin 'plasticboy/vim-markdown'
+
+" Typescript
+Plugin 'leafgarland/typescript-vim'
+
+" Elixir
 Plugin 'elixir-editors/vim-elixir'
 Plugin 'slashmili/alchemist.vim'
-"Plugin 'scrooloose/nerdtree'
+
+" Python
+Plugin 'hynek/vim-python-pep8-indent'
+Plugin 'niftylettuce/vim-jinja'
+Plugin 'zchee/deoplete-jedi'
+
+" C#
+"Plugin 'OmniSharp/omnisharp-vim'
+
 
 au BufRead,BufNewFile *.ts  setlocal filetype=typescript
 let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
@@ -57,9 +55,14 @@ call vundle#end()
 filetype plugin indent on
 syntax on
 
+"Plugin 'w0rp/ale'
 let g:ale_lint_on_save = 1
 let g:ale_lint_on_text_changed = 0
 let g:ale_completion_enabled = 1
+let g:ale_fixers = {
+\    'javascript': ['eslint']
+\}
+
 "let g:ale_linters = {
 "\   'elixir': ['dogma']
 "\}
@@ -68,10 +71,10 @@ let g:ale_completion_enabled = 1
 "let g:syntastic_typescript_checkers = ['tsuquyomi']
 "let g:tsuquyomi_completion_detail = 1
 
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsExpandTrigger="<c-x><c-k>"
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsExpandTrigger="<c-x><c-k>"
 
-let g:syntastic_python_checkers = ['flake8']
+"let g:syntastic_python_checkers = ['flake8']
 
 "let g:javascript_plugin_flow = 1
 "let g:jsx_ext_required = 0
@@ -83,7 +86,7 @@ let g:syntastic_python_checkers = ['flake8']
 "\}
 "let g:flow#enable = 0
 
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|deps|_build)|(\.(swp|git))$'
+let g:ctrlp_custom_ignore = '\v[\/](output|node_modules|__pycache__|deps|_build)|(\.(swp|git))$'
 
 
 
@@ -94,8 +97,9 @@ let g:ctrlp_custom_ignore = '\v[\/](node_modules|deps|_build)|(\.(swp|git))$'
 "
 "let g:syntastic_vue_checkers = ['eslint']
 "let g:syntastic_vue_eslint_exec = 'eslint_d'
-autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+"autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
 
+autocmd BufRead,BufNewFile *.mjs setlocal filetype=javascript
 
 let mapleader = ","
 set nocompatible " Vim rather than Vi
@@ -299,3 +303,5 @@ no <leader>B :!date -Iseconds > ~/.start-time<cr>
 no <leader>E :!/home/dvcolgan/bin/end-session<cr>
 no <leader>R :!rm /home/dvcolgan/.sessions-today && touch /home/dvcolgan/.sessions-today<cr>
 
+"autocmd FileType javascript set formatprg=prettier\ --stdin
+"autocmd BufWritePre *.js :normal magggqG'a
