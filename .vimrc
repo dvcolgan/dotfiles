@@ -22,6 +22,7 @@ Plugin 'reedes/vim-colors-pencil'
 "Plugin 'digitaltoad/vim-jade'
 "Plugin 'altercation/vim-colors-solarized'
 Plugin 'scrooloose/syntastic'
+Plugin 'scrooloose/nerdtree'
 "Plugin 'mklabs/grunt.vim'
 "Plugin 'lambdatoast/elm.vim'
 Plugin 'janko-m/vim-test'
@@ -34,7 +35,7 @@ Plugin 'Quramy/tsuquyomi'
 Plugin 'Shougo/vimproc.vim'
 "Plugin 'clausreinke/typescript-tools.vim'
 "Plugin 'Valloric/YouCompleteMe'
-Plugin 'SirVer/ultisnips'
+"Plugin 'SirVer/ultisnips'
 "Plugin 'davidhalter/jedi-vim'
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'dracula/vim'
@@ -215,7 +216,7 @@ set guioptions-=mTLlRrb
 
 let g:omni_sql_no_default_maps = 1
 
-set term=xterm-256color
+"set term=xterm-256color
 iab pdb import ipdb; ipdb.set_trace()
 iab rdb ((val: any) => { console.log(val); return val; })(
 
@@ -243,10 +244,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-colorscheme pencil
-set bg=light
-"set bg=dark
-"colorscheme jellybeans
+"colorscheme pencil
+"set bg=light
+set bg=dark
+colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown

@@ -10,12 +10,15 @@ Plugin 'VundleVim/Vundle.vim'
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'reedes/vim-colors-pencil'
 
+
 " IDE things
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/nerdtree'
 Plugin 'janko-m/vim-test'
 Plugin 'w0rp/ale'
 Plugin 'Shougo/deoplete.nvim'
+Plugin 'SirVer/ultisnips'
+"Plugin 'honza/vim-snippets'
 
 " Javascript
 "Plugin 'pangloss/vim-javascript'
@@ -31,6 +34,10 @@ Plugin 'mattn/emmet-vim'
 
 " Markdown
 Plugin 'plasticboy/vim-markdown'
+"Plugin 'gabrielelana/vim-markdown'
+"Plugin 'tpope/vim-markdown'
+"Plugin 'nelstrom/vim-markdown-folding'
+Plugin 'vim-voom/VOoM'
 
 " Typescript
 Plugin 'leafgarland/typescript-vim'
@@ -42,18 +49,30 @@ Plugin 'slashmili/alchemist.vim'
 " Python
 Plugin 'hynek/vim-python-pep8-indent'
 Plugin 'niftylettuce/vim-jinja'
-Plugin 'zchee/deoplete-jedi'
+"Plugin 'davidhalter/jedi-vim'
+"Plugin 'zchee/deoplete-jedi'
 
 " C#
 "Plugin 'OmniSharp/omnisharp-vim'
 
 
-au BufRead,BufNewFile *.ts  setlocal filetype=typescript
-let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
-let g:vim_markdown_folding_disabled = 1
 call vundle#end()
 filetype plugin indent on
 syntax on
+
+au BufRead,BufNewFile *.ts  setlocal filetype=typescript
+let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
+let g:vim_markdown_folding_disabled = 1
+
+autocmd FileType markdown no <enter> za
+"autocmd FileType markdown no <tab> >>
+"autocmd FileType markdown no <s-tab> <<
+let g:voom_return_key = "<Tab>"
+let g:voom_tab_key = "<C-Tab>"
+let g:voom_tree_width = 60
+let g:voom_default_mode = 'markdown'
+let g:voom_always_allow_move_left = 1
+
 
 "Plugin 'w0rp/ale'
 let g:ale_lint_on_save = 1
@@ -71,8 +90,12 @@ let g:ale_fixers = {
 "let g:syntastic_typescript_checkers = ['tsuquyomi']
 "let g:tsuquyomi_completion_detail = 1
 
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsExpandTrigger="<c-x><c-k>"
+let g:UltiSnipsExpandTrigger="<tab>"
+
+"let g:UltiSnipsJumpForwardTrigger="c-b"
+"let g:UltiSnipsJumpBackwardTrigger="c-f"
+let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+
 
 "let g:syntastic_python_checkers = ['flake8']
 
@@ -86,7 +109,8 @@ let g:ale_fixers = {
 "\}
 "let g:flow#enable = 0
 
-let g:ctrlp_custom_ignore = '\v[\/](output|node_modules|__pycache__|deps|_build)|(\.(swp|git))$'
+let g:ctrlp_follow_symlinks = 1
+let g:ctrlp_custom_ignore = '\v[\/](output|env|dist|staticfiles|node_modules|__pycache__|deps|_build)|(\.(swp|git|png|jpg|pyc))$'
 
 
 
@@ -147,8 +171,9 @@ set hlsearch
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
 no <space><space> :wa<cr>:w<cr>
-no <leader>d !!date +"\%A \%B \%d, \%Y \%r"<cr>
-no <leader>D !!date +"\%B \%d, \%Y"<cr>
+no <leader>D !!date +"\%A \%B \%d, \%Y \%r"<cr>
+no <leader>d !!date +"\%B \%d, \%Y"<cr>
+no <leader>d !!date +"\%B \%d, \%Y"<cr>
 no <leader>v :vsp $MYVIMRC<cr>
 no <leader>s :source $MYVIMRC<cr>
 "no <leader>u :!./manage.py test intake --nomigrations<cr>
@@ -186,10 +211,13 @@ no t j
 no n k
 no s l
 
+no <leader>nf :NERDTreeFind<cr>
+
 vnoremap y "*y
 
 
  let g:NERDTreeMapOpenInTab = ''
+ let NERDTreeIgnore = ['\.pyc$']
 
 " Allow creating a directory and file at the same time
 augroup vimrc-auto-mkdir
@@ -230,6 +258,7 @@ set termencoding=utf-8
 
 set autoindent
 set smartindent
+au Filetype markdown setlocal tabstop=4 softtabstop=4 shiftwidth=4
 au Filetype yaml setlocal tabstop=2 softtabstop=2 shiftwidth=2
 au filetype elm call DisableIndent()
 autocmd FileType markdown,text setlocal spell
@@ -270,16 +299,6 @@ no <space>l :!love .<cr>
 
 nnoremap <space>r :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
-"let test#python#runner = 'djangotest'
-no <leader>t :TestNearest<cr>
-no <leader>T :TestFile<cr>
-"no <leader>t :!npm test<cr>
-let test#strategy = "neovim"
-
-"no <leader>t :!npm test<cr>
-"no <leader>t :!lime test neko<cr>
-no <leader>r :TsuReloadProject<cr>
-
 
 inoremap {<cr> {<cr>}<c-o>O
 inoremap {,<cr> {<cr>},<c-o>O
@@ -287,10 +306,10 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-colorscheme pencil
-set bg=light
-"set bg=dark
-"colorscheme jellybeans
+"colorscheme pencil
+"set bg=light
+set bg=dark
+colorscheme jellybeans
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -305,3 +324,55 @@ no <leader>R :!rm /home/dvcolgan/.sessions-today && touch /home/dvcolgan/.sessio
 
 "autocmd FileType javascript set formatprg=prettier\ --stdin
 "autocmd BufWritePre *.js :normal magggqG'a
+
+" Fix syntax highlighting breaking in vue files among others
+autocmd BufEnter *.vue :syntax sync fromstart
+autocmd BufEnter *.html :syntax sync fromstart
+
+
+
+
+" vim-test
+nmap <silent> <leader>tN :TestNearest<CR>
+nmap <silent> <leader>tF :TestFile<CR>
+nmap <silent> <leader>tS :TestSuite<CR>
+nmap <silent> <leader>tL :TestLast<CR>
+nmap <silent> <leader>tV :TestVisit<CR>
+
+nmap <silent> <leader>tn :TestNearest --keepdb<CR>
+nmap <silent> <leader>tf :TestFile --keepdb<CR>
+nmap <silent> <leader>ts :TestSuite --keepdb<CR>
+nmap <silent> <leader>tl :TestLast --keepdb<CR>
+nmap <silent> <leader>tv :TestVisit --keepdb<CR>
+
+
+let test#strategy = "neovim"
+let test#python#pytest#options = '--capture=no'
+
+autocmd BufRead,BufNewFile /home/dvcolgan/projects/propertymetrics/* call SetPropertyMetricsOptions()
+function SetPropertyMetricsOptions()
+    let g:test#project_root = "/home/dvcolgan/projects/propertymetrics/propertymetrics/"
+    let g:test#python#runner = 'djangonose'
+    nmap <silent> <leader>tn :TestNearest -s --nologcapture --keepdb<CR>
+    nmap <silent> <leader>tf :TestFile -s --nologcapture --keepdb<CR>
+    nmap <silent> <leader>ts :TestSuite -s --nologcapture --keepdb<CR>
+    nmap <silent> <leader>tl :TestLast -s --nologcapture --keepdb<CR>
+    nmap <silent> <leader>tv :TestVisit -s --nologcapture --keepdb<CR>
+endfunction
+
+let g:markdown_mapping_switch_status='<Leader><Space>'
+
+
+set synmaxcol=0
+
+" Rename current file from Gary Bernhardt
+function! RenameFile()
+    let old_name = expand('%')
+    let new_name = input('New file name: ', expand('%'), 'file')
+    if new_name != '' && new_name != old_name
+        exec ':saveas ' . new_name
+        exec ':silent !rm ' . old_name
+        redraw!
+    endif
+endfunction
+map <leader>rf :call RenameFile()<cr>
