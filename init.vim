@@ -9,6 +9,7 @@ Plugin 'VundleVim/Vundle.vim'
 " Colors
 Plugin 'nanotech/jellybeans.vim'
 Plugin 'reedes/vim-colors-pencil'
+Plugin 'romainl/Apprentice'
 
 
 " IDE things
@@ -18,6 +19,7 @@ Plugin 'janko-m/vim-test'
 Plugin 'w0rp/ale'
 Plugin 'Shougo/deoplete.nvim'
 Plugin 'SirVer/ultisnips'
+Plugin 'mileszs/ack.vim'
 "Plugin 'honza/vim-snippets'
 
 " Javascript
@@ -310,6 +312,7 @@ inoremap {{<cr> {<cr>});<c-o>O
 "set bg=light
 set bg=dark
 colorscheme jellybeans
+"colorscheme apprentice
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
