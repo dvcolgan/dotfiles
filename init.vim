@@ -21,6 +21,8 @@ Plugin 'Shougo/deoplete.nvim'
 Plugin 'SirVer/ultisnips'
 Plugin 'mileszs/ack.vim'
 "Plugin 'honza/vim-snippets'
+Plugin 'tpope/vim-eunuch'
+"Plugin 'ambv/black'
 
 " Javascript
 "Plugin 'pangloss/vim-javascript'
@@ -31,7 +33,7 @@ Plugin 'chemzqm/vim-jsx-improve'
 Plugin 'posva/vim-vue'
 
 " HTML and CSS
-Plugin 'ap/vim-css-color' 
+Plugin 'ap/vim-css-color'
 Plugin 'mattn/emmet-vim'
 
 " Markdown
@@ -54,9 +56,6 @@ Plugin 'niftylettuce/vim-jinja'
 "Plugin 'davidhalter/jedi-vim'
 "Plugin 'zchee/deoplete-jedi'
 
-" C#
-"Plugin 'OmniSharp/omnisharp-vim'
-
 
 call vundle#end()
 filetype plugin indent on
@@ -67,8 +66,6 @@ let g:vim_markdown_fenced_languages = ['python=python', 'bash=sh']
 let g:vim_markdown_folding_disabled = 1
 
 autocmd FileType markdown no <enter> za
-"autocmd FileType markdown no <tab> >>
-"autocmd FileType markdown no <s-tab> <<
 let g:voom_return_key = "<Tab>"
 let g:voom_tab_key = "<C-Tab>"
 let g:voom_tree_width = 60
@@ -188,6 +185,7 @@ ino # X#
 
 no <leader>h :nohl<cr>
 
+" Make Dvorak nicer and fix the hjkl offset by one
 no  zz
 no t gj
 no n gk
@@ -204,6 +202,7 @@ no K S
 no S $
 no H ^
 
+" I heart this mapping
 no - J
 
 no Q gqap
@@ -249,8 +248,6 @@ no <SPACE>s <C-w>l
 imap <F4> {}<UP>zzo
 imap <F5> {}<UP>zzo
 imap <F6> {});<UP>zzo
-"imap <leader>e= <%=  %><left><left><left>
-"imap <leader>e <% %><left><left><left>
 
 " TECHNICAL
 set mouse=a
@@ -277,12 +274,6 @@ iab helo hello
 iab teh the
 iab tommorrow tomorrow
 
-"function! Reload()
-"    execute ':silent !/home/dcolgan/projects/conferam/reload.sh'
-"    execute ':redraw!'
-"endfunction
-"autocmd BufWritePost *.py call Reload()
-
 set guioptions+=mTLlRrb
 set guioptions-=mTLlRrb
 
@@ -291,8 +282,6 @@ let g:omni_sql_no_default_maps = 1
 "set term=xterm-256color
 iab pdb import ipdb; ipdb.set_trace()
 iab rdb ((val: any) => { console.log(val); return val; })(
-
-iab rcc class extends Component {render() {return ();}};
 
 "nnoremap <leader>el :ElmEvalLine<CR>
 "vnoremap <leader>es :<C-u>ElmEvalSelection<CR>
@@ -308,11 +297,14 @@ inoremap {;<cr> {<cr>};<c-o>O
 inoremap {)<cr> {<cr>})<c-o>O
 inoremap {{<cr> {<cr>});<c-o>O
 
-"colorscheme pencil
-"set bg=light
-set bg=dark
-colorscheme jellybeans
+colorscheme pencil
+set bg=light
+"set bg=dark
+"colorscheme jellybeans
 "colorscheme apprentice
+
+no <leader>cd :colorscheme jellybeans<cr>:set bg=dark<cr>
+no <leader>cl :colorscheme pencil<cr>:set bg=light<cr>
 
 set directory=~/.vim/swap,.
 au BufNewFile,BufFilePre,BufRead *.md set filetype=markdown
@@ -342,11 +334,11 @@ nmap <silent> <leader>tS :TestSuite<CR>
 nmap <silent> <leader>tL :TestLast<CR>
 nmap <silent> <leader>tV :TestVisit<CR>
 
-nmap <silent> <leader>tn :TestNearest --keepdb<CR>
-nmap <silent> <leader>tf :TestFile --keepdb<CR>
-nmap <silent> <leader>ts :TestSuite --keepdb<CR>
-nmap <silent> <leader>tl :TestLast --keepdb<CR>
-nmap <silent> <leader>tv :TestVisit --keepdb<CR>
+nmap <silent> <leader>tn :TestNearest<CR>
+nmap <silent> <leader>tf :TestFile<CR>
+nmap <silent> <leader>ts :TestSuite<CR>
+nmap <silent> <leader>tl :TestLast<CR>
+nmap <silent> <leader>tv :TestVisit<CR>
 
 
 let test#strategy = "neovim"
@@ -361,6 +353,15 @@ function SetPropertyMetricsOptions()
     nmap <silent> <leader>ts :TestSuite -s --nologcapture --keepdb<CR>
     nmap <silent> <leader>tl :TestLast -s --nologcapture --keepdb<CR>
     nmap <silent> <leader>tv :TestVisit -s --nologcapture --keepdb<CR>
+endfunction
+
+autocmd BufRead,BufNewFile /home/dvcolgan/projects/loantrac/* call SetLoantracOptions()
+function SetLoantracOptions()
+    nmap <silent> <leader>tn :TestNearest --keepdb<CR>
+    nmap <silent> <leader>tf :TestFile --keepdb<CR>
+    nmap <silent> <leader>ts :TestSuite --keepdb<CR>
+    nmap <silent> <leader>tl :TestLast --keepdb<CR>
+    nmap <silent> <leader>tv :TestVisit --keepdb<CR>
 endfunction
 
 let g:markdown_mapping_switch_status='<Leader><Space>'
@@ -379,3 +380,9 @@ function! RenameFile()
     endif
 endfunction
 map <leader>rf :call RenameFile()<cr>
+"map <leader>rd :call delete(expand('%')) \| bdelete!<cr>
+
+map <leader><space> :s/\[ \]/[x]/<cr>
+au BufNewFile,BufFilePre,BufRead *.md iab tx [ ]
+
+"autocmd BufWritePre *.py execute ':Black'

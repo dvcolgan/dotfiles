@@ -1,3 +1,5 @@
+!In the event that I'm on Linux I use these for swapping ctrl/alt/win and backspace/capslock
+
 remove Control = Control_L
 remove Control = Control_R
 remove Mod1 = Alt_L
