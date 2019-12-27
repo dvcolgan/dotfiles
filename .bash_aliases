@@ -23,6 +23,7 @@ complete -F _todo t
 
 alias b='redshift -O 6500'
 alias s='./manage.py shell_plus'
+alias r='./manage.py runserver 0.0.0.0:8000'
 alias mm='./manage.py makemigrations'
 alias m='./manage.py migrate'
 
@@ -48,7 +49,7 @@ function git_current_repository() {
 }
 alias g="git"
 alias gst="git status"
-alias gl="git pull"
+alias gl="git log"
 alias gup="git pull --rebase"
 alias gp="git push"
 alias gd="git diff"
@@ -112,5 +113,38 @@ function ggpnp {
 function glp(){
     git log --pretty=$@
 }
+function ggheroku {
+    git push --force heroku $(git_current_branch):master
+}
+function hammy {
+    git push --force origin $(git_current_branch):hammy
+}
 
 alias cdvenv='cd "$WORKON_HOME/$(pwd | rev | cut -d '/' -f 1 | rev)/lib/python2.7/site-packages"'
+
+alias tm="tmux"
+alias tml="tmux list-sessions"
+
+function tma {
+    if [ -z "$*" ]; then
+        # If no arguments, just attach to the last one
+        tmux attach   
+    else
+        # Otherwise attach to the argument given
+        tmux attach -t $1
+    fi
+}
+
+alias pygrep="grep -riI --include=*.py"
+alias jsgrep="grep -riI --include=*.js"
+alias coffeegrep="grep -riI --include=*.coffee"
+alias mdgrep="grep -riI --include=*.md"
+alias htmlgrep="grep -riI --include=*.html"
+alias cssgrep="grep -riI --include=*.{css,scss,sass,styl}"
+
+alias theirs="git checkout --theirs"
+alias ours="git checkout --ours"
+
+function tgrep {
+    grep -riI --include=*.$1 $2
+}
