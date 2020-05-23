@@ -11,7 +11,7 @@ keycode 64 = Control_L
 keycode 108 = Control_R
 keycode 133 = Alt_L
 keycode 134 = Super_R
-keycode 37 = Super_L
+!keycode 37 = Super_L
 keycode 105 = Alt_R
 keycode 135 = Alt_R
 
@@ -26,3 +26,10 @@ remove Lock = Caps_Lock
 keycode 22 = Caps_Lock
 keycode 66 = BackSpace
 add Lock = Caps_Lock
+
+!Allow using Super + HTNS as arrow keys
+keycode 37 = Mode_switch
+keycode 44 = h H Left Home
+keycode 45 = t T Down Page_Down
+keycode 46 = n N Up Page_Up
+keycode 47 = s S Right End
