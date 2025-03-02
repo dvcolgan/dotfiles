@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Browser - {{ current_path }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        .breadcrumb { margin-bottom: 20px; padding: 10px; background-color: #f8f9fa; }
+        .item { display: flex; padding: 5px; border-bottom: 1px solid #eee; }
+        .item:hover { background-color: #f8f9fa; }
+        .item-name { flex-grow: 1; }
+        .item-size { width: 100px; text-align: right; color: #6c757d; }
+        .item-date { width: 200px; text-align: right; color: #6c757d; }
+        .folder { color: #007bff; }
+        .file { color: #212529; }
+        .parent { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h1>File Browser</h1>
+    <div class="breadcrumb">
+        <a href="/">Home</a> / 
+        {% for part in breadcrumbs %}
+            <a href="{{ part.path }}">{{ part.name }}</a> / 
+        {% endfor %}
+    </div>
+    
+    {% if current_path != "/" %}
+    <div class="parent">
+        <a href="{{ parent_path }}">..</a> (Parent Directory)
+    </div>
+    {% endif %}
+    
+    {% for item in items %}
+    <div class="item">
+        <div class="item-name">
+            <a href="{{ item.path }}" class="{{ 'folder' if item.is_dir else 'file' }}">
+                {{ item.name }}{{ '/' if item.is_dir else '' }}
+            </a>
+        </div>
+        <div class="item-size">{{ item.size }}</div>
+        <div class="item-date">{{ item.modified }}</div>
+    </div>
+    {% endfor %}
+</body>
+</html>
+        

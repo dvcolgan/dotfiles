@@ -1,0 +1,140 @@
+alias l='ls'
+alias ll='ls -lX'
+alias ..='cd ..;ls'
+alias ...='cd ../../;ls'
+alias vim='nvim'
+alias v='vim'
+alias rgl='rg --no-ignore'
+alias k='kubectl'
+alias t='toot post'
+
+alias s='./manage.py shell_plus'
+alias r='./manage.py runserver 0.0.0.0:8000'
+alias mm='./manage.py makemigrations'
+alias m='./manage.py migrate'
+#alias t='./manage.py test --parallel 6 --keepdb'
+alias T='./manage.py test --parallel 6'
+
+alias rmswp='find . | grep \.swp$ | xargs rm'
+alias rmpyc='find . -name '*.pyc' -delete'
+
+alias g="git"
+alias gst="git status"
+alias gl="git log"
+alias gup="git pull --rebase"
+alias gp="git push"
+alias gd="git diff"
+alias gdc="git diff --cached"
+function gdv() { # mine doesn't add -w
+    git diff $@ | vim -R -
+}
+function gdcv() { # my own
+    git diff --cached $@ | vim -R -
+}
+alias gc="git commit -v"
+alias gc!="git commit -v --amend"
+alias gca="git commit -v -a"
+alias gca!="git commit -v -a --amend"
+alias gcmsg="git commit -m"
+alias gco="git checkout"
+alias gcm="git checkout main"
+alias grs="git restore --staged"
+
+alias gr="git remote"
+alias grv="git remote -v"
+alias grmv="git remote rename"
+alias grrm="git remote remove"
+alias gsetr="git remote set-url"
+alias grup="git remote update"
+alias gri="git rebase -i"
+alias grc="git rebase --continue"
+alias gra="git rebase --abort"
+alias gb="git branch"
+alias gba="git branch -a"
+alias gbd="git branch -d"
+alias gbD="git branch -D"
+alias gcount="git shortlog -sn"
+alias gcl="git config --list"
+alias gcp="git cherry-pick"
+#alias glg="git log --stat --max-count=10"
+alias glgg="git log --graph --max-count=10"
+alias glgga="git log --graph --decorate --all"
+alias glo="git log --oneline --decorate --color"
+alias glg="git log --oneline --decorate --color --graph"
+alias gss="git status -s"
+alias ga="git add"
+alias gaa="git add -A"
+alias gap="git add -p"
+alias gm="git merge"
+alias grh="git reset HEAD"
+alias grhh="git reset HEAD --hard"
+alias gclean="git reset --hard && git clean -dfx"
+alias gwc="git whatchanged -p --abbrev-commit --pretty=medium"
+alias gsts="git stash show --text"
+alias gsta="git stash"
+alias gstp="git stash pop"
+alias gstd="git stash drop"
+function ggpull {
+    git pull github $(git_current_branch)
+}
+function ggpur {
+    git pull --rebase github $(git_current_branch)
+}
+function ggpush {
+    git push github $(git_current_branch)
+}
+function ggpnp {
+    git pull github $(git_current_branch) && git push github $(git_current_branch)
+}
+function glp(){
+    git log --pretty=$@
+}
+function ggheroku {
+    git push --force heroku $(git_current_branch):main
+}
+
+function mainsquash {
+    git reset $(git merge-base main $(git_current_branch))
+}
+
+
+alias tm="tmux"
+alias tml="tmux list-sessions"
+
+function tma {
+    if [ -z "$*" ]; then
+        # If no arguments, just attach to the last one
+        tmux attach
+    else
+        # Otherwise attach to the argument given
+        tmux attach -t $1
+    fi
+}
+
+alias theirs="git checkout --theirs"
+alias ours="git checkout --ours"
+
+function tgrep {
+    grep -riI --include=*.$1 $2
+}
+
+alias blue="redshift -x"
+alias orange="redshift -x; redshift -O 3500K"
+alias red="redshift -x; redshift -O 2500K"
+
+alias sdreader_off="echo '2-3' | sudo tee /sys/bus/usb/drivers/usb/unbind"
+alias sdreader_on="echo '2-3' | sudo tee /sys/bus/usb/drivers/usb/bind"
+
+alias wm="sudo wifi-menu"
+
+
+function captainslog()
+{
+    vim ~/solarplex/inbox/journals/journal-$(date -I).md
+}
+
+alias j="captainslog"
+
+alias gm="goodmorning.sh"
+alias ge="goodevening.sh"
+alias gn="goodnight.sh"

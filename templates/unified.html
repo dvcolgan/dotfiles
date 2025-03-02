@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Browser - {{ current_path }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        .breadcrumb { margin-bottom: 20px; padding: 10px; background-color: #f8f9fa; }
+        .item { display: flex; padding: 5px; border-bottom: 1px solid #eee; align-items: flex-start; }
+        .item:hover { background-color: #f8f9fa; }
+        .item-name { flex-grow: 1; }
+        .item-size { width: 100px; text-align: right; color: #6c757d; }
+        .item-date { width: 200px; text-align: right; color: #6c757d; }
+        .folder { color: #007bff; }
+        .file { color: #212529; }
+        .parent { margin-bottom: 10px; }
+        .image-container { 
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+        .single-view { text-align: center; }
+        img.preview { max-width: 300px; max-height: 200px; margin: 10px 0; }
+        img.full { max-width: 100%; max-height: 80vh; }
+        .image-info { margin-top: 10px; color: #6c757d; }
+        .back-button { margin-top: 20px; }
+        .back-button a { 
+            padding: 10px 20px; 
+            background-color: #007bff; 
+            color: white; 
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-button a:hover { background-color: #0056b3; }
+        .content-preview-container {
+            width: 100%;
+            margin: 10px 0;
+            padding: 0;
+            flex-shrink: 0;
+            display: block;
+        }
+        .text-preview-container {
+            width: 100%;
+            height: auto;
+            text-align: left;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            background-color: #f8f9fa;
+            max-height: 400px;
+        }
+        .text-preview {
+            width: 100%;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+        .file-content {
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            overflow: auto;
+            max-width: 90%;
+            max-height: 80vh;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .file-link {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .item-header {
+            width: 100%;
+            padding: 5px;
+            background-color: #e9ecef;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+        .folder-description {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-left: 5px solid #007bff;
+            border-radius: 3px;
+        }
+        .folder-description-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h1>File Browser</h1>
+    <div class="breadcrumb">
+        <a href="/">Home</a> / 
+        {% for part in breadcrumbs %}
+            <a href="{{ part.path }}">{{ part.name }}</a> / 
+        {% endfor %}
+    </div>
+    
+    {% if is_directory %}
+        {% if folder_description %}
+        <div class="folder-description">
+            <div class="folder-description-title">{{ folder_description_filename }}</div>
+            {% if folder_description_is_image %}
+                <img src="/raw{{ folder_description_path }}" class="preview" alt="{{ folder_description_filename }}">
+            {% else %}
+                <div class="text-preview">{{ folder_description }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if current_path != "/" %}
+        <div class="parent">
+            <a href="{{ parent_path }}">..</a> (Parent Directory)
+        </div>
+        {% endif %}
+        
+        {% for item in items %}
+            <div class="item">
+                <div class="item-header">
+                    <div class="file-link">
+                        <a href="{{ item.path }}" class="{{ 'folder' if item.is_dir else 'file' }}">
+                            {{ item.name }}{{ '/' if item.is_dir else '' }}
+                        </a>
+                        <span class="item-size">{{ item.size }}</span>
+                        <span class="item-date">{{ item.modified }}</span>
+                    </div>
+                </div>
+            </div>
+            
+            {% if not item.is_dir %}
+                <div class="content-preview-container">
+                    {% if item.is_image %}
+                        <div class="text-preview-container" style="text-align: center;">
+                            <img src="/raw{{ item.path }}" class="preview" alt="{{ item.name }}">
+                        </div>
+                    {% elif item.is_text %}
+                        <div class="text-preview-container">
+                            <div class="text-preview">{{ item.full_content }}</div>
+                        </div>
+                    {% else %}
+                        <div class="text-preview-container">
+                            <p>This file type cannot be previewed. <a href="/raw{{ item.path }}" download>Download</a></p>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        <div class="single-view">
+            {% if is_image %}
+                <div class="image-container">
+                    <img src="/raw{{ current_path }}" class="full" alt="{{ file_name }}">
+                    <div class="image-info">
+                        <p>{{ file_name }} ({{ file_size }})</p>
+                    </div>
+                </div>
+            {% elif is_text %}
+                <div class="file-content">{{ file_content }}</div>
+            {% else %}
+                <p>This file type cannot be previewed. <a href="/raw{{ current_path }}" download>Download</a></p>
+            {% endif %}
+            
+            <div class="back-button">
+                <a href="{{ parent_path }}">Back to Directory</a>
+            </div>
+        </div>
+    {% endif %}
+</body>
+</html>
+    
