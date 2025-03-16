@@ -12,6 +12,7 @@ dependencies = [
     "llm-anthropic>=0.15.1",
     "pillow>=11.1.0",
     "pydantic-xml>=2.14.3",
+    "python-dotenv>=1.0.1",
     "python-frontmatter>=1.1.0",
     "python-multipart>=0.0.20",
     "pyyaml>=6.0.2",
