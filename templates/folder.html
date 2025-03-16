@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'macros/htmx.html' import hx_get %}
 {% block content %}
     <div class="breadcrumbs">
         {% for crumb in breadcrumbs %}
@@ -64,13 +65,11 @@
         <div class="file-previews">
             <h2>File Previews</h2>
             {% for item in items %}
-                {% if not item.is_dir and item.file_model %}
+                {% if not item.is_dir  %}
                     <div class="file-preview-item">
                         <h3>{{ item.name }}</h3>
-                        <!-- Use the model's template selection -->
-                        {% with file=item.file_model %}
-                            {% include file.get_template_name() %}
-                        {% endwith %}
+
+                        {{ hx_get(item.url_for) }}
                     </div>
                 {% endif %}
             {% endfor %}

@@ -2,6 +2,17 @@
 
 A modern implementation of the Zettelkasten note-taking system, designed to make knowledge management as engaging as social media.
 
+---
+
+# Main Concepts
+
+## Entities
+
+In order to reference an entity, you use its name. Every unique name is the same entity.
+
+You can filter by entity_name and it will show you all folders with that name across the whole system.
+
+
 ## Overview
 
 Recursive Garden is a dynamic knowledge management system that combines elements of Zettelkasten system with UI patterns from popular social platforms. The application allows for:

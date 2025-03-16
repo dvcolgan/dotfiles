@@ -227,8 +227,8 @@ class FileSystemDatabase:
             if p.is_file()
         ]
 
-    def list_directory(self, path: Path) -> list[dict]:
-        """List directory contents with file information"""
+    def list_directory(self, path: Path) -> list[FileModel]:
+        """List directory contents with file models"""
         resolved_path = self._resolve_path(path)
 
         if not resolved_path.exists() or not resolved_path.is_dir():
@@ -237,41 +237,33 @@ class FileSystemDatabase:
         items = []
         for item in resolved_path.iterdir():
             try:
-                stat_info = item.stat()
-                is_dir = item.is_dir()
-                size = stat_info.st_size if item.is_file() else None
-                modified = stat_info.st_mtime
-                is_symlink = item.is_symlink()
-                is_broken_symlink = is_symlink and not item.exists()
-
                 # Only load file_model for files, not directories
-                file_model = None
                 if item.is_file():
                     try:
                         model_class = self._get_model_class(item)
                         file_model = model_class.load(item)
+                        items.append(file_model)
                     except Exception:
                         # If we can't load the file model, proceed without it
                         pass
-
-                items.append(
-                    {
-                        "name": item.name,
-                        "is_dir": is_dir,
-                        "size": size,
-                        "modified": modified,
-                        "path": str(item),
-                        "is_symlink": is_symlink,
-                        "is_broken_symlink": is_broken_symlink,
-                        "file_model": file_model,
-                    }
-                )
+                else:
+                    # For directories, we create a special type of FileModel
+                    # This could be extended to create a DirectoryModel class
+                    # but for now we'll work with what we have
+                    stat_info = item.stat()
+                    metadata = FileModel(
+                        filename=item.name,
+                        path=item,
+                        content=None,
+                    )
+                    metadata.is_dir = True  # Add directory flag
+                    items.append(metadata)
             except (FileNotFoundError, PermissionError):
                 # Handle errors gracefully
                 pass
 
         # Sort items - directories first, then files
-        items.sort(key=lambda x: (not x["is_dir"], x["name"].lower()))
+        items.sort(key=lambda x: (not getattr(x, "is_dir", False), x.filename.lower()))
         return items
 
     def get_breadcrumbs(self, path: Path) -> list[dict]:

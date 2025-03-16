@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ action.name }} Action</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        .action-info {
+            margin-bottom: 20px;
+        }
+        .parameters {
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .code-block {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ action.name }} Action</h1>
+    
+    <div class="action-info">
+        <p>{{ action.description }}</p>
+        <p><strong>Method:</strong> {{ action.method }}</p>
+        <p><strong>Endpoint:</strong> {{ action.endpoint }}</p>
+    </div>
+    
+    <div class="parameters">
+        <h2>Parameters</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th>Required</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for param in action.parameters %}
+                <tr>
+                    <td>{{ param.name }}</td>
+                    <td>{{ param.type }}</td>
+                    <td>{{ param.description }}</td>
+                    <td>{{ param.required }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="example">
+        <h2>Example Request</h2>
+        <div class="code-block">{{ action.example }}</div>
+    </div>
+</body>
+</html>
