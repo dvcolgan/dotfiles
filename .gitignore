@@ -65,7 +65,3 @@ logs/
 
 entropy/
 **/entropy/
-
-build/
-static/
-media/

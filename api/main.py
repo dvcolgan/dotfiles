@@ -13,10 +13,10 @@ from .settings import BASE_DIR
 app = FastAPI()
 
 # Mount the static files directory
-app.mount("/static", StaticFiles(directory=BASE_DIR / "api" / "static"), name="static")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 # Set up templates directory
-templates = Jinja2Templates(directory=BASE_DIR / "api" / "templates")
+templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 # Create file system database
 fs_db = FileSystemDatabase(Path.home())
