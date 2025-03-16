@@ -1,38 +1,47 @@
-<h1 class="text-3xl font-bold text-gray-800 border-b border-gray-200 pb-3 mb-6">{{ action.name }} Action</h1>
-
-<div class="mb-8">
-    <p class="mb-4">{{ action.description }}</p>
-    <p class="font-medium mb-2"><span class="font-bold">Method:</span> {{ action.method }}</p>
-    <p class="font-medium mb-2"><span class="font-bold">Endpoint:</span> {{ action.endpoint }}</p>
-</div>
-
-<div class="mb-8">
-    <h2 class="text-2xl font-bold mb-4">Parameters</h2>
-    <div class="overflow-x-auto">
-        <table class="w-full border-collapse">
-            <thead>
-                <tr>
-                    <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Name</th>
-                    <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Type</th>
-                    <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Description</th>
-                    <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Required</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for param in action.parameters %}
-                <tr class="hover:bg-gray-50">
-                    <td class="border border-gray-300 px-4 py-2">{{ param.name }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ param.type }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ param.description }}</td>
-                    <td class="border border-gray-300 px-4 py-2">{{ param.required }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ action.name }} Action</title>
+    <link rel="stylesheet" href="http://localhost:3333/static/frontend/styles.css">
+</head>
+<body class="bg-gray-50 font-sans max-w-3xl mx-auto px-6 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 border-b border-gray-200 pb-3 mb-6">{{ action.name }} Action</h1>
+    
+    <div class="mb-8">
+        <p class="mb-4">{{ action.description }}</p>
+        <p class="font-medium mb-2"><span class="font-bold">Method:</span> {{ action.method }}</p>
+        <p class="font-medium mb-2"><span class="font-bold">Endpoint:</span> {{ action.endpoint }}</p>
     </div>
-</div>
-
-<div>
-    <h2 class="text-2xl font-bold mb-4">Example Request</h2>
-    <div class="bg-gray-100 border border-gray-300 rounded p-4 font-mono text-sm whitespace-pre-wrap">{{ action.example }}</div>
-</div>
+    
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold mb-4">Parameters</h2>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr>
+                        <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Name</th>
+                        <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Type</th>
+                        <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Description</th>
+                        <th class="text-left bg-gray-100 border border-gray-300 px-4 py-2">Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for param in action.parameters %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">{{ param.name }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ param.type }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ param.description }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ param.required }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div>
+        <h2 class="text-2xl font-bold mb-4">Example Request</h2>
+        <div class="bg-gray-100 border border-gray-300 rounded p-4 font-mono text-sm whitespace-pre-wrap">{{ action.example }}</div>
+    </div>
+</body>
+</html>
