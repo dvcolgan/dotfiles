@@ -27,12 +27,12 @@ export default defineConfig({
   ],
   server: {
     cors: true,
-    allowedHosts: [
-      '.optimism.buri-frog.ts.net',
-      '.optimism',
-      '.entropy.buri-frog.ts.net',
-      '.entropy',
-    ],
+    // allowedHosts: [
+    //   '.optimism.buri-frog.ts.net',
+    //   '.optimism',
+    //   '.entropy.buri-frog.ts.net',
+    //   '.entropy',
+    // ],
     port: 3333,
   },
   resolve: {

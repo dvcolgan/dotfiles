@@ -3,6 +3,7 @@
 @plugin '@tailwindcss/forms';
 
 @source "../templates";
+@source "../api";
 
 .text-stroke {
   text-shadow:
