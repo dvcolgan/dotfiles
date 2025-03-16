@@ -462,3 +462,71 @@ canvas {
     transform: rotate(360deg);
   }
 }
+/* Three column layout for file browser */
+.file-browser {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* 1/4 : 2/4 : 1/4 proportion */
+  gap: 1.5rem;
+  margin: 2rem 0;
+  padding: 0 1rem;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-stack);
+  color: var(--text-color);
+  background-color: var(--background-color);
+  max-width: 100%; /* Changed from 1200px to allow full-width */
+  margin: 0 auto;
+  padding: 0; /* Removed padding to extend to edges */
+}
+
+.content-wrapper {
+  padding: 1rem; /* Move padding to a wrapper around the content */
+}
+
+.directory-column {
+  border-right: 1px solid var(--border-color);
+  padding-right: 1rem;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+.preview-column {
+  border-left: 1px solid var(--border-color);
+  padding-left: 1rem;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+.current-card-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1rem;
+  background-color: var(--secondary-color);
+  border-radius: var(--border-radius);
+  min-height: 300px;
+  overflow-x: auto; /* Allow horizontal scrolling if needed */
+}
+
+.current-card-placeholder {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
+
+.file-preview-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.file-preview-item:last-child {
+  border-bottom: none;
+}
+
+.breadcrumbs {
+  margin-bottom: 1.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+}

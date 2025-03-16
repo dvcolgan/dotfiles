@@ -14,65 +14,85 @@
     <h1>Directory: {{ path }}</h1>
 
     {% if items %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Type</th>
-                    <th>Size</th>
-                    <th>Last Modified</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if path != "/" %}
-                    <tr>
-                        <td>
-                            <a href="{{ Path(path).parent or '/' }}">..</a>
-                        </td>
-                        <td>Directory</td>
-                        <td>-</td>
-                        <td>-</td>
-                    </tr>
-                {% endif %}
-                {% for item in items %}
-                    <tr>
-                        <td>
-                            <a href="{{ item.path }}">{{ item.name }}
-                                {% if item.is_dir %}/{% endif %}
-                            </a>
-                        </td>
-                        <td>
-                            {% if item.is_dir %}
-                                Directory
-                            {% else %}
-                                File
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item.size is not none %}
-                                {{ item.size }} bytes
-                            {% else %}
-                                -
-                            {% endif %}
-                        </td>
-                        <td>{{ item.modified | datetime }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="file-browser">
+            <!-- Left Column: Directory Listing (1/4 width) -->
+            <div class="directory-column">
+                <h2>Directory Contents</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Type</th>
+                            <th>Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if path != "/" %}
+                            <tr>
+                                <td>
+                                    <a href="{{ Path(path).parent or '/' }}">..</a>
+                                </td>
+                                <td>Directory</td>
+                                <td>-</td>
+                            </tr>
+                        {% endif %}
+                        {% for item in items %}
+                            <tr>
+                                <td>
+                                    <a href="{{ item.path }}">{{ item.name }}
+                                        {% if item.is_dir %}/{% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if item.is_dir %}
+                                        Directory
+                                    {% else %}
+                                        File
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if item.size is not none %}
+                                        {{ item.size }} bytes
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- File Previews Section -->
-        <div class="file-previews">
-            <h2>File Previews</h2>
-            {% for item in items %}
-                {% if not item.is_dir  %}
-                    <div class="file-preview-item">
-                        <h3>{{ item.name }}</h3>
+            <!-- Center Column: Current Card (2/4 width) -->
+            <div class="current-card-column">
+                <div class="current-card-placeholder">
+                    <h1>Current Card</h1>
+                    <p>Select a file to view its contents here</p>
+                </div>
+            </div>
 
-                        {{ hx_get(item.url_for) }}
-                    </div>
-                {% endif %}
-            {% endfor %}
+            <!-- Right Column: File Previews (1/4 width) -->
+            <div class="preview-column">
+                <h2>Files</h2>
+                <div class="file-previews">
+                    {% for item in items %}
+                        {% if not item.is_dir %}
+                            <div class="file-preview-item">
+                                <h3>{{ item.name }}</h3>
+                                <p>Last modified: {{ item.modified | datetime }}</p>
+                                <p>
+                                    <a href="{{ item.path }}" 
+                                       hx-get="{{ item.url_for }}?format=html"
+                                       hx-target=".current-card-column"
+                                       hx-swap="innerHTML">
+                                        View in center
+                                    </a>
+                                </p>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     {% else %}
         <p>This directory is empty.</p>
