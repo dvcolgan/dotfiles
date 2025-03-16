@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Recursive Garden Browser Plugin",
+  "version": "1.0",
+  "description": "Creates cards from bookmarks",
+  "permissions": ["bookmarks", "tabs", "activeTab", "scripting"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["http://localhost/*", "https://*/*", "http://*/*"]
+}

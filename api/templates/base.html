@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Capital Letter Directories</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/styles.css">
+
+        <!-- Include highlight.js for code highlighting -->
+        <link rel="stylesheet" href="/static/highlight.min.css">
+        <script src="/static/highlight.min.js"></script>
+        <script src="/static/htmx.min.js"></script>
+        <script>hljs.highlightAll();</script>
+    </head>
+
+    <body>
+        <header>
+            <nav class="header-nav">
+                <ul>
+                    <li>
+                        <a href="/">Recursive Garden</a>
+                    </li>
+                    <li>
+                        <a href="/home">Home</a>
+                    </li>
+                    <li>
+                        <a href="/users">Users</a>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>

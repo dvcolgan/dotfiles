@@ -2,12 +2,25 @@
 
 set -o errexit -o errtrace -o nounset -o pipefail
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
+cd "$HOME"
 
-echo "I am currently in $(pwd)."
+# Symlink home folder files
+ln -s "$HOME/repos/dotfiles/home/bashrc" .bashrc
+ln -s "$HOME/repos/dotfiles/home/Xmodmap"  .Xmodmap
+ln -s "$HOME/repos/dotfiles/home/bash_aliases" .bash_aliases
 
-cp -v ./vconsole.conf /etc/vconsole.conf
-cp -v ./dvorak-with-tweaks.map /usr/share/kbd/keymaps/i386/dvorak/
+cd "$HOME/.config/"
 
-#cp ./tmux.conf "$HOME/.tmux.conf"
-#cp ./bashrc "$HOME/.tmux.conf"
+# Symlink .config folder directories
+ln -s "$HOME/repos/dotfiles/bspwm/" .
+ln -s "$HOME/repos/dotfiles/sxhkd/" .
+ln -s "$HOME/repos/dotfiles/dunst/" .
+ln -s "$HOME/repos/dotfiles/alacritty/" .
+
+# Symlink some folders for better use in the home folder
+ln -s "$HOME/repos/dotfiles/actions/" .
+ln -s "$HOME/repos/dotfiles/templates/" .
+ln -s "$HOME/repos/dotfiles/tools/" .
+ln -s "$HOME/repos/dotfiles/nvim/" .
+
+

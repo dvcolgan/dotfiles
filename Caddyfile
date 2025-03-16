@@ -1,0 +1,50 @@
+{
+    # Global options
+    auto_https off  # Disable HTTPS since Tailscale is already encrypted
+    http_port 80    # Listen on port 80
+}
+
+# Configuration for optimism hosts
+(optimism_config) {
+    handle /api/* {
+        reverse_proxy localhost:4444
+    }
+
+    handle /* {
+        reverse_proxy localhost:8000
+    }
+}
+
+optimism.buri-frog.ts.net, optimism {
+    import optimism_config
+}
+
+# Configuration for entropy hosts
+(entropy_config) {
+    handle /api/* {
+        reverse_proxy localhost:4444
+    }
+
+    handle /* {
+        reverse_proxy localhost:8000
+    }
+}
+
+entropy.buri-frog.ts.net, entropy {
+    import entropy_config
+}
+
+# Configuration for superorganism hosts
+(superorganism_config) {
+    handle /api/* {
+        reverse_proxy localhost:4444
+    }
+
+    handle /* {
+        reverse_proxy localhost:8000
+    }
+}
+
+superorganism.buri-frog.ts.net, superorganism {
+    import superorganism_config
+}

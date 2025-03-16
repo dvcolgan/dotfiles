@@ -1,0 +1,15 @@
+<h1>Image: {{ file.name }}</h1>
+
+<div class="file-info">
+    <p>Size: {{ file.size }} bytes</p>
+    <p>Modified: {{ file.modified | datetime }}</p>
+    <p>Created: {{ file.created | datetime }}</p>
+    <p>MIME Type: {{ file.mime_type }}</p>
+</div>
+
+<div class="image-preview">
+    <img src="{{ file.path }}"
+         alt="{{ file.name }}"
+         style="max-width: 100%;
+                max-height: 500px">
+</div>

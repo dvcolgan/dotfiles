@@ -1,3 +1,0 @@
-timestamp: {{ timestamp }}
-{% if title %}title: {{ title }}{% endif %}
-

@@ -1,0 +1,12 @@
+<h1>Text File: {{ file.name }}</h1>
+
+<div class="file-info">
+    <p>Size: {{ file.size }} bytes</p>
+    <p>Modified: {{ file.modified | datetime }}</p>
+    <p>Created: {{ file.created | datetime }}</p>
+    <p>MIME Type: {{ file.mime_type }}</p>
+</div>
+
+<div class="text-content">
+    <pre>{{ file.content }}</pre>
+</div>
