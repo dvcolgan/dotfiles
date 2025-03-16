@@ -8,19 +8,19 @@ from pydantic import BaseModel, ValidationError
 from pydantic_xml import BaseXmlModel
 
 from .files import (
-    BinaryFileModel,
-    CssFileModel,
-    FileModel,
-    HtmlFileModel,
-    ImageFileModel,
-    JavaScriptFileModel,
-    JsonFileModel,
-    MarkdownFileModel,
-    PydanticXmlFileModel,
-    PythonFileModel,
-    TextFileModel,
-    XmlFileModel,
-    YamlFileModel,
+    BaseFile,
+    BinaryFile,
+    CSSFile,
+    HTMLFile,
+    ImageFile,
+    JavaScriptFile,
+    JSONFile,
+    MarkdownFile,
+    PydanticXMLFile,
+    PythonFile,
+    TextFile,
+    XMLFile,
+    YAMLFile,
 )
 
 T = TypeVar("T", bound=BaseModel)
@@ -31,23 +31,23 @@ class FileSystemDatabase:
         self.root_path = root_path
         self.root_path.mkdir(parents=True, exist_ok=True)
 
-        self.file_previews: dict[str, type[FileModel]] = {
-            ".txt": TextFileModel,
-            ".md": MarkdownFileModel,
-            ".html": HtmlFileModel,
-            ".htm": HtmlFileModel,
-            ".py": PythonFileModel,
-            ".css": CssFileModel,
-            ".js": JavaScriptFileModel,
-            ".json": JsonFileModel,
-            ".yaml": YamlFileModel,
-            ".yml": YamlFileModel,
-            ".xml": XmlFileModel,
-            ".jpg": ImageFileModel,
-            ".jpeg": ImageFileModel,
-            ".png": ImageFileModel,
-            ".gif": ImageFileModel,
-            ".svg": ImageFileModel,
+        self.file_previews: dict[str, type[BaseFile]] = {
+            ".txt": TextFile,
+            ".md": MarkdownFile,
+            ".html": HTMLFile,
+            ".htm": HTMLFile,
+            ".py": PythonFile,
+            ".css": CSSFile,
+            ".js": JavaScriptFile,
+            ".json": JSONFile,
+            ".yaml": YAMLFile,
+            ".yml": YAMLFile,
+            ".xml": XMLFile,
+            ".jpg": ImageFile,
+            ".jpeg": ImageFile,
+            ".png": ImageFile,
+            ".gif": ImageFile,
+            ".svg": ImageFile,
         }
 
     def _resolve_path(self, path: Path) -> Path:
@@ -57,23 +57,23 @@ class FileSystemDatabase:
             return path
         return self.root_path / path
 
-    def _get_model_class(self, path: Path) -> type[FileModel]:
+    def _get_model_class(self, path: Path) -> type[BaseFile]:
         suffix = path.suffix.lower()
-        return self.file_previews.get(suffix, BinaryFileModel)
+        return self.file_previews.get(suffix, BinaryFile)
 
     def get(
         self, path: Path, model_class: type[BaseModel] | None = None
-    ) -> FileModel | T:
+    ) -> BaseFile | T:
         resolved_path = self._resolve_path(path)
         file_model_class = self._get_model_class(resolved_path)
 
         # Handle XML files with Pydantic models
         if (
-            issubclass(file_model_class, XmlFileModel)
+            issubclass(file_model_class, XMLFile)
             and model_class
             and issubclass(model_class, BaseXmlModel)
         ):
-            file_model = PydanticXmlFileModel.load(resolved_path, model_class)
+            file_model = PydanticXMLFile.load(resolved_path, model_class)
         else:
             file_model = file_model_class.load(resolved_path)
 
@@ -81,10 +81,10 @@ class FileSystemDatabase:
         if model_class and not isinstance(file_model.content, model_class):
             try:
                 # For JSON/YAML files, content is already a dict that can be parsed
-                if isinstance(file_model, (JsonFileModel, YamlFileModel)):
+                if isinstance(file_model, (JSONFile, YAMLFile)):
                     validated_content = model_class.model_validate(file_model.content)
                 # For text files, try to parse as JSON
-                elif isinstance(file_model, TextFileModel):
+                elif isinstance(file_model, TextFile):
                     try:
                         parsed_content = json.loads(file_model.content)
                         validated_content = model_class.model_validate(parsed_content)
@@ -132,14 +132,14 @@ class FileSystemDatabase:
         self,
         path: Path,
         content: str | dict | bytes | BaseXmlModel | ET.Element | BaseModel,
-    ) -> FileModel:
+    ) -> BaseFile:
         resolved_path = self._resolve_path(path)
         model_class = self._get_model_class(resolved_path)
 
         # Handle Pydantic models (XML and regular)
         if isinstance(content, BaseModel):
             if isinstance(content, BaseXmlModel):
-                model = PydanticXmlFileModel(
+                model = PydanticXMLFile(
                     filename=resolved_path.name,
                     path=resolved_path,
                     content=content,
@@ -147,45 +147,45 @@ class FileSystemDatabase:
                 )
             else:
                 # For regular Pydantic models, serialize to appropriate format based on file extension
-                if model_class == JsonFileModel:
-                    model = JsonFileModel(
+                if model_class == JSONFile:
+                    model = JSONFile(
                         filename=resolved_path.name,
                         path=resolved_path,
                         content=content.model_dump(),
                     )
-                elif model_class in (YamlFileModel,):
-                    model = YamlFileModel(
+                elif model_class in (YAMLFile,):
+                    model = YAMLFile(
                         filename=resolved_path.name,
                         path=resolved_path,
                         content=content.model_dump(),
                     )
                 else:
                     # Default to JSON serialization for text formats
-                    model = TextFileModel(
+                    model = TextFile(
                         filename=resolved_path.name,
                         path=resolved_path,
                         content=json.dumps(content.model_dump(), indent=2),
                     )
         # Handle raw ElementTree Element for XML files
-        elif model_class == XmlFileModel and isinstance(content, ET.Element):
-            model = XmlFileModel(
+        elif model_class == XMLFile and isinstance(content, ET.Element):
+            model = XMLFile(
                 filename=resolved_path.name, path=resolved_path, content=content
             )
         # Handle content based on appropriate model type
-        elif isinstance(content, str) and issubclass(model_class, TextFileModel):
+        elif isinstance(content, str) and issubclass(model_class, TextFile):
             model = model_class(
                 filename=resolved_path.name, path=resolved_path, content=content
             )
         # Handle dict content for JSON/YAML
         elif isinstance(content, dict) and (
-            model_class == JsonFileModel or model_class == YamlFileModel
+            model_class == JSONFile or model_class == YAMLFile
         ):
             model = model_class(
                 filename=resolved_path.name, path=resolved_path, content=content
             )
         # Handle binary content
         elif isinstance(content, bytes):
-            model = BinaryFileModel(
+            model = BinaryFile(
                 filename=resolved_path.name, path=resolved_path, content=content
             )
         # Unable to determine appropriate model
@@ -227,7 +227,7 @@ class FileSystemDatabase:
             if p.is_file()
         ]
 
-    def list_directory(self, path: Path) -> list[FileModel]:
+    def list_directory(self, path: Path) -> list[BaseFile]:
         """List directory contents with file models"""
         resolved_path = self._resolve_path(path)
 
@@ -247,11 +247,11 @@ class FileSystemDatabase:
                         # If we can't load the file model, proceed without it
                         pass
                 else:
-                    # For directories, we create a special type of FileModel
+                    # For directories, we create a special type of File
                     # This could be extended to create a DirectoryModel class
                     # but for now we'll work with what we have
                     stat_info = item.stat()
-                    metadata = FileModel(
+                    metadata = BaseFile(
                         filename=item.name,
                         path=item,
                         content=None,

@@ -1,5 +1,7 @@
+import grp
 import json
 import os
+import pwd
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
@@ -21,7 +23,7 @@ class FileMetadata(BaseModel):
     group: str = ""  # Group of the file
 
 
-class FileModel(BaseModel):
+class BaseFile(BaseModel):
     filename: str
     path: Path
     metadata: FileMetadata = Field(default_factory=FileMetadata)
@@ -32,7 +34,7 @@ class FileModel(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     @classmethod
-    def load(cls, path: Path) -> "FileModel":
+    def load(cls, path: Path) -> "BaseFile":
         raise NotImplementedError("Subclass must implement load method")
 
     def save(self) -> None:
@@ -45,14 +47,11 @@ class FileModel(BaseModel):
         Returns a tuple of (owner, group)
         """
         try:
-            import grp
-            import pwd
-
             stat_info = os.stat(path)
             owner = pwd.getpwuid(stat_info.st_uid).pw_name
             group = grp.getgrgid(stat_info.st_gid).gr_name
             return owner, group
-        except (ImportError, KeyError, FileNotFoundError):
+        except (KeyError, FileNotFoundError):
             # Fallback if we can't get the owner/group info
             return "", ""
 
@@ -149,13 +148,13 @@ class FileModel(BaseModel):
         return f"/home/{username}/{rel_path}"
 
 
-class TextFileModel(FileModel):
+class TextFile(BaseFile):
     content: str = ""
     mime_type: ClassVar[str] = "text/plain"
     template_name: ClassVar[str] = "file_previews/txt.html"
 
     @classmethod
-    def load(cls, path: Path) -> "TextFileModel":
+    def load(cls, path: Path) -> "TextFile":
         if not path.exists():
             return cls(filename=path.name, path=path, content="")
 
@@ -185,35 +184,35 @@ class TextFileModel(FileModel):
         self.metadata.group = group
 
 
-class MarkdownFileModel(TextFileModel):
+class MarkdownFile(TextFile):
     mime_type: ClassVar[str] = "text/markdown"
     template_name: ClassVar[str] = "file_previews/md.html"
 
 
-class HtmlFileModel(TextFileModel):
+class HTMLFile(TextFile):
     mime_type: ClassVar[str] = "text/html"
     # Use text template for HTML to escape content
 
 
-class CodeFileModel(TextFileModel):
+class CodeFile(TextFile):
     """Base class for all code file types"""
 
     template_name: ClassVar[str] = "file_previews/code.html"
 
 
-class PythonFileModel(CodeFileModel):
+class PythonFile(CodeFile):
     mime_type: ClassVar[str] = "text/x-python"
 
 
-class CssFileModel(CodeFileModel):
+class CSSFile(CodeFile):
     mime_type: ClassVar[str] = "text/css"
 
 
-class JavaScriptFileModel(CodeFileModel):
+class JavaScriptFile(CodeFile):
     mime_type: ClassVar[str] = "application/javascript"
 
 
-class StructuredDataFileModel(FileModel):
+class StructuredDataFile(BaseFile):
     """Base class for structured data files (JSON, YAML)"""
 
     content: dict[str, Any] = Field(default_factory=dict)
@@ -223,12 +222,12 @@ class StructuredDataFileModel(FileModel):
         raise NotImplementedError("Subclass must implement get_display_content method")
 
 
-class JsonFileModel(StructuredDataFileModel):
+class JSONFile(StructuredDataFile):
     mime_type: ClassVar[str] = "application/json"
     template_name: ClassVar[str] = "file_previews/json.html"
 
     @classmethod
-    def load(cls, path: Path) -> "JsonFileModel":
+    def load(cls, path: Path) -> "JSONFile":
         if not path.exists():
             return cls(filename=path.name, path=path, content={})
 
@@ -262,11 +261,11 @@ class JsonFileModel(StructuredDataFileModel):
         return json.dumps(self.content, indent=2)
 
 
-class YamlFileModel(StructuredDataFileModel):
+class YAMLFile(StructuredDataFile):
     mime_type: ClassVar[str] = "application/yaml"
 
     @classmethod
-    def load(cls, path: Path) -> "YamlFileModel":
+    def load(cls, path: Path) -> "YAMLFile":
         if not path.exists():
             return cls(filename=path.name, path=path, content={})
 
@@ -302,12 +301,12 @@ class YamlFileModel(StructuredDataFileModel):
         return yaml.dump(self.content, default_flow_style=False)
 
 
-class XmlFileModel(FileModel):
+class XMLFile(BaseFile):
     content: Optional[ET.Element] = None
     mime_type: ClassVar[str] = "application/xml"
 
     @classmethod
-    def load(cls, path: Path) -> "XmlFileModel":
+    def load(cls, path: Path) -> "XMLFile":
         if not path.exists():
             root = ET.Element("root")
             return cls(filename=path.name, path=path, content=root)
@@ -358,15 +357,13 @@ class XmlFileModel(FileModel):
             return xml_str.decode("utf-8")
 
 
-class PydanticXmlFileModel(FileModel):
+class PydanticXMLFile(BaseFile):
     content: Optional[BaseXmlModel] = None
     model_class: Optional[type[BaseXmlModel]] = None
     mime_type: ClassVar[str] = "application/xml"
 
     @classmethod
-    def load(
-        cls, path: Path, model_class: type[BaseXmlModel]
-    ) -> "PydanticXmlFileModel":
+    def load(cls, path: Path, model_class: type[BaseXmlModel]) -> "PydanticXMLFile":
         if not path.exists():
             return cls(
                 filename=path.name,
@@ -422,12 +419,12 @@ class PydanticXmlFileModel(FileModel):
         return xml_content.decode("utf-8")
 
 
-class BinaryFileModel(FileModel):
+class BinaryFile(BaseFile):
     content: bytes = b""
     mime_type: ClassVar[str] = "application/octet-stream"
 
     @classmethod
-    def load(cls, path: Path) -> "BinaryFileModel":
+    def load(cls, path: Path) -> "BinaryFile":
         if not path.exists():
             return cls(filename=path.name, path=path, content=b"")
 
@@ -468,6 +465,6 @@ class BinaryFileModel(FileModel):
         return f"Binary file, {self.metadata.size} bytes"
 
 
-class ImageFileModel(BinaryFileModel):
+class ImageFile(BinaryFile):
     mime_type: ClassVar[str] = "image/*"  # Generic image type
     template_name: ClassVar[str] = "file_previews/image.html"

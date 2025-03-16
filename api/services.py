@@ -1,18 +1,7 @@
-import json
-
-from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import (
-    JSONResponse,
-)
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 # Get templates from the main app
-from .templates import templates
-from .utils import (
-    Format,
-    RequestedFormat,
-    entity_database,
-)
 
 router = APIRouter()
 
@@ -33,64 +22,6 @@ class EntityResponse(BaseModel):
     y: float
     type: str
     message: str
-
-
-@router.get("/actions/move_entity/")
-async def get_move_entity_action(request: Request, format: RequestedFormat):
-    """
-    Get information about the move entity action.
-
-    Supports multiple response formats:
-    - HTML: Returns a rendered template with action description
-    - JSON: Returns the JSON schema of the action inputs
-    - MD: Returns a markdown description of the action
-    """
-    # Get the model schema for documentation
-    schema = EntityMove.model_json_schema()
-
-    # Action description for templates
-    action_info = {
-        "name": "Move Entity",
-        "description": "Move a game entity to an absolute position defined by x and y coordinates.",
-        "method": "POST",
-        "endpoint": "/actions/move_entity/",
-        "parameters": [
-            {
-                "name": "entity_name",
-                "type": "string",
-                "description": "Unique identifier of the entity to move",
-                "required": True,
-            },
-            {
-                "name": "x",
-                "type": "number",
-                "description": "Target X coordinate",
-                "required": True,
-            },
-            {
-                "name": "y",
-                "type": "number",
-                "description": "Target Y coordinate",
-                "required": True,
-            },
-        ],
-        "example": json.dumps({"entity_name": "player", "x": 100, "y": 200}, indent=2),
-    }
-
-    # Return appropriate response based on format
-    if format == Format.JSON:
-        return JSONResponse(content=schema)
-    elif format == Format.MARKDOWN:
-        return templates.TemplateResponse(
-            "action.md",
-            {"request": request, "action": action_info},
-            media_type="text/markdown",
-        )
-    else:  # Default to HTML
-        return templates.TemplateResponse(
-            "action.html",
-            {"request": request, "action": action_info},
-        )
 
 
 @router.post("/actions/move_entity/", response_model=EntityResponse)

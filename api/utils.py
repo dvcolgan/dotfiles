@@ -63,38 +63,3 @@ def get_capital_directories():
     ]
 
     return capital_dirs
-
-
-def get_linux_users():
-    """Get all Linux users on the system."""
-    users = []
-    try:
-        import pwd
-
-        for user in pwd.getpwall():
-            # Include only real users (typically UID >= 1000)
-            if (
-                user.pw_uid >= 1000
-                and user.pw_shell != "/usr/sbin/nologin"
-                and user.pw_shell != "/bin/false"
-            ):
-                users.append(
-                    {
-                        "username": user.pw_name,
-                        "uid": user.pw_uid,
-                        "home_dir": user.pw_dir,
-                        "shell": user.pw_shell,
-                    }
-                )
-    except ImportError:
-        # Handle case when pwd is not available (e.g., on Windows)
-        pass
-    return users
-
-
-# Mock database for demonstration purposes
-entity_database = {
-    "player": {"x": 0, "y": 0, "type": "player"},
-    "enemy_1": {"x": 10, "y": 20, "type": "enemy"},
-    "chest": {"x": 15, "y": 30, "type": "item"},
-}

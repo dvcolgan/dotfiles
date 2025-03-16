@@ -13,10 +13,10 @@ from .db import FileSystemDatabase
 
 # Get templates from the main app
 from .templates import templates
+from .users import get_linux_users
 from .utils import (
     Format,
     RequestedFormat,
-    get_linux_users,
 )
 
 router = APIRouter()
@@ -24,18 +24,6 @@ router = APIRouter()
 
 @router.get("/home")
 async def list_users(request: Request, format: RequestedFormat):
-    """
-    Endpoint to display all Linux users on the system.
-
-    Supports multiple response formats:
-    - HTML (default): Returns rendered template
-    - JSON: Returns raw user data
-    - MD: Returns markdown template
-
-    Format can be specified via:
-    - Query parameter: ?format=json/html/md
-    - Accept header: application/json, text/html, text/markdown
-    """
     users = get_linux_users()
 
     # Return appropriate response based on format
