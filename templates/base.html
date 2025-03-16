@@ -3,13 +3,11 @@
     <head>
         <title>Capital Letter Directories</title>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="/static/styles.css">
-
+        <script src="/static/htmx.min.js"></script>
         <!-- Include highlight.js for code highlighting -->
         <link rel="stylesheet" href="/static/highlight.min.css">
-        <link rel="stylesheet" href="http://localhost:3333/static/frontend/styles.css">
         <script src="/static/highlight.min.js"></script>
-        <script src="/static/htmx.min.js"></script>
+        <link rel="stylesheet" href="http://localhost:3333/static/frontend/styles.css">
         <!-- Initial highlight for page load -->
         <script>
             document.addEventListener('DOMContentLoaded', () => {
@@ -18,21 +16,24 @@
         </script>
     </head>
 
-    <body>
-        <header>
-            <nav class="header-nav">
-                <ul>
+    <body class="bg-gray-50 text-gray-800 max-w-7xl mx-auto font-sans">
+        <header class="border-b border-gray-200 py-4 mb-6">
+            <nav>
+                <ul class="flex gap-6">
                     <li>
-                        <a href="/">Recursive Garden</a>
+                        <a href="/" class="text-blue-600 hover:text-blue-800 transition">Recursive Garden</a>
                     </li>
                     <li>
-                        <a href="/home">Home</a>
+                        <a href="/home" class="text-blue-600 hover:text-blue-800 transition">Home</a>
                     </li>
                 </ul>
             </nav>
         </header>
-        {% block content %}
-        {% endblock content %}
+        
+        <main class="px-4">
+            {% block content %}
+            {% endblock content %}
+        </main>
 
         <!-- HTMX event listeners for dynamic content -->
         <script>

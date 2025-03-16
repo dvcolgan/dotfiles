@@ -1,4 +1,4 @@
-{% macro hx_get(url, trigger="revealed", target="this", swap="innerHTML", indicator_classes="spinner") %}
+{% macro hx_get(url, trigger="revealed", target="this", swap="innerHTML", indicator_classes="") %}
   <div class="htmx-lazy-load"
        hx-get="{{ url }}?format=html"
        hx-trigger="{{ trigger }}"
@@ -6,8 +6,8 @@
        hx-swap="{{ swap }}"
        hx-indicator="#lazy-load-indicator-{{ range(1, 9999)|random }}">
     <div id="lazy-load-indicator-{{ range(1, 9999)|random }}" 
-         class="htmx-indicator {{ indicator_classes }}">
-      Loading...
+         class="htmx-indicator {{ indicator_classes if indicator_classes else 'inline-block w-8 h-8 border-4 border-gray-300 border-t-blue-600 rounded-full animate-spin' }}">
+      <span class="sr-only">Loading...</span>
     </div>
   </div>
 {% endmacro %}

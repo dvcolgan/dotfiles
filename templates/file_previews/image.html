@@ -1,15 +1,16 @@
-<h1>Image: {{ file.name }}</h1>
+<div class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Image: {{ file.name }}</h1>
 
-<div class="file-info">
-    <p>Size: {{ file.size }} bytes</p>
-    <p>Modified: {{ file.modified | datetime }}</p>
-    <p>Created: {{ file.created | datetime }}</p>
-    <p>MIME Type: {{ file.mime_type }}</p>
-</div>
+    <div class="bg-white p-4 rounded-md shadow-sm mb-6">
+        <p class="mb-1"><span class="font-medium">Size:</span> {{ file.size }} bytes</p>
+        <p class="mb-1"><span class="font-medium">Modified:</span> {{ file.modified | datetime }}</p>
+        <p class="mb-1"><span class="font-medium">Created:</span> {{ file.created | datetime }}</p>
+        <p class="mb-1"><span class="font-medium">MIME Type:</span> {{ file.mime_type }}</p>
+    </div>
 
-<div class="image-preview">
-    <img src="{{ file.path }}"
-         alt="{{ file.name }}"
-         style="max-width: 100%;
-                max-height: 500px">
+    <div class="flex justify-center">
+        <img src="{{ file.path }}"
+             alt="{{ file.name }}"
+             class="max-w-full max-h-96 object-contain rounded shadow-md">
+    </div>
 </div>

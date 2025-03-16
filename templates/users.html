@@ -1,31 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Linux Users on the System</h1>
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-4">Linux Users on the System</h1>
+        <p class="mb-6">Listing all real system users</p>
 
-    <p>Listing all real system users</p>
-
-    {% if users %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>User ID</th>
-                    <th>Home Directory</th>
-                    <th>Shell</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td><a href="/home/{{ user.username }}">{{ user.username }}</td>
-                        <td>{{ user.uid }}</td>
-                        <td>{{ user.home_dir }}</td>
-                        <td>{{ user.shell }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No users found.</p>
-    {% endif %}
+        {% if users %}
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr>
+                            <th class="text-left bg-gray-100 px-4 py-2 border">Username</th>
+                            <th class="text-left bg-gray-100 px-4 py-2 border">User ID</th>
+                            <th class="text-left bg-gray-100 px-4 py-2 border">Home Directory</th>
+                            <th class="text-left bg-gray-100 px-4 py-2 border">Shell</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="border px-4 py-2">
+                                    <a href="/home/{{ user.username }}" class="text-blue-600 hover:underline">{{ user.username }}</a>
+                                </td>
+                                <td class="border px-4 py-2">{{ user.uid }}</td>
+                                <td class="border px-4 py-2">{{ user.home_dir }}</td>
+                                <td class="border px-4 py-2">{{ user.shell }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="italic text-gray-600">No users found.</p>
+        {% endif %}
+    </div>
 {% endblock content %}
