@@ -1,17 +1,15 @@
-import json
 import mimetypes
 from pathlib import Path
 
+import yaml
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import (
     FileResponse,
     HTMLResponse,
-    JSONResponse,
     PlainTextResponse,
 )
 
 from .db import FileSystemDatabase
-from .services import EntityMove
 
 # Get templates from the main app
 from .templates import templates
@@ -24,7 +22,7 @@ from .utils import (
 router = APIRouter()
 
 
-@router.get("/users")
+@router.get("/home")
 async def list_users(request: Request, format: RequestedFormat):
     """
     Endpoint to display all Linux users on the system.
@@ -63,8 +61,13 @@ async def list_users(request: Request, format: RequestedFormat):
         )
 
 
-@router.get("/users/{username}/{path:path}")
-async def user_file_browser(request: Request, username: str, path: str = ""):
+@router.get("/home/{username}/{path:path}")
+async def user_file_browser(
+    request: Request,
+    format: RequestedFormat,
+    username: str,
+    path: str = "",
+):
     """Browse files and folders in a specific user's home directory."""
     # Build the complete path
     base_path = Path("/home") / username
@@ -91,16 +94,48 @@ async def user_file_browser(request: Request, username: str, path: str = ""):
         # Get breadcrumbs for navigation
         breadcrumbs = user_fs_db.get_breadcrumbs(file_path)
 
-        return templates.TemplateResponse(
-            "folder.html",
-            {
-                "request": request,
+        # Return appropriate response based on format
+        if format == Format.JSON:
+            return {
                 "path": str(file_path),
                 "username": username,
                 "items": items,
                 "breadcrumbs": breadcrumbs,
-            },
-        )
+            }
+        elif format == Format.MARKDOWN:
+            return templates.TemplateResponse(
+                "folder.md",
+                {
+                    "request": request,
+                    "path": str(file_path),
+                    "username": username,
+                    "items": items,
+                    "breadcrumbs": breadcrumbs,
+                },
+                media_type="text/markdown",
+            )
+        elif format == Format.YAML:
+            content = yaml.dump(
+                {
+                    "path": str(file_path),
+                    "username": username,
+                    "items": items,
+                    "breadcrumbs": breadcrumbs,
+                }
+            )
+            return PlainTextResponse(content, media_type="application/yaml")
+        else:  # Default to HTML
+            return templates.TemplateResponse(
+                "folder.html",
+                {
+                    "request": request,
+                    "path": str(file_path),
+                    "username": username,
+                    "items": items,
+                    "breadcrumbs": breadcrumbs,
+                },
+                media_type="text/html",
+            )
 
     # If it's a file, serve the file
     elif file_path.is_file():
@@ -112,15 +147,89 @@ async def user_file_browser(request: Request, username: str, path: str = ""):
             file_model.metadata.mime_type or mimetypes.guess_type(str(file_path))[0]
         )
 
-        # For binary files and images, serve directly
-        if (
+        # For RAW format or binary files, serve directly
+        if format == Format.RAW or (
             mime_type
             and (mime_type.startswith("image/") or not mime_type.startswith("text/"))
             and not mime_type.startswith("application/json")
         ):
             return FileResponse(file_path)
 
-        # For text files, return content as plain text
+        # For other formats, handle based on format
+        if format == Format.JSON:
+            # Return file metadata and content if possible
+            response_data = {
+                "path": str(file_path),
+                "name": file_path.name,
+                "size": file_path.stat().st_size,
+                "mime_type": mime_type,
+                "metadata": file_model.metadata.dict()
+                if hasattr(file_model.metadata, "dict")
+                else {},
+            }
+
+            # Include content for text files
+            if mime_type and (
+                mime_type.startswith("text/") or mime_type == "application/json"
+            ):
+                response_data["content"] = (
+                    file_model.content if isinstance(file_model.content, str) else None
+                )
+
+            return response_data
+
+        elif format == Format.MARKDOWN:
+            template_name = (
+                f"file_previews/{file_model.template_name}.md"
+                if hasattr(file_model, "template_name")
+                else "file_previews/default.md"
+            )
+            return templates.TemplateResponse(
+                template_name,
+                {
+                    "request": request,
+                    "file": file_model,
+                    "path": str(file_path),
+                    "username": username,
+                    "mime_type": mime_type,
+                },
+                media_type="text/markdown",
+            )
+
+        elif format == Format.YAML:
+            response_data = {
+                "path": str(file_path),
+                "name": file_path.name,
+                "size": file_path.stat().st_size,
+                "mime_type": mime_type,
+                "metadata": file_model.metadata.dict()
+                if hasattr(file_model.metadata, "dict")
+                else {},
+            }
+            if mime_type and (
+                mime_type.startswith("text/") or mime_type == "application/json"
+            ):
+                response_data["content"] = (
+                    file_model.content if isinstance(file_model.content, str) else None
+                )
+            return PlainTextResponse(
+                yaml.dump(response_data), media_type="application/yaml"
+            )
+
+        elif format == Format.HTML:
+            return templates.TemplateResponse(
+                file_model.template_name,
+                {
+                    "request": request,
+                    "file": file_model,
+                    "path": str(file_path),
+                    "username": username,
+                    "mime_type": mime_type,
+                },
+                media_type="text/html",
+            )
+
+        # For text files with no specific format requested, return content as plain text
         if isinstance(file_model.content, str):
             return PlainTextResponse(file_model.content)
 
@@ -138,61 +247,3 @@ async def dashboard(request: Request):
         "dashboard.html",
         {"request": request},
     )
-
-
-@router.get("/actions/move_entity/")
-async def get_move_entity_action(request: Request, format: RequestedFormat):
-    """
-    Get information about the move entity action.
-
-    Supports multiple response formats:
-    - HTML: Returns a rendered template with action description
-    - JSON: Returns the JSON schema of the action inputs
-    - MD: Returns a markdown description of the action
-    """
-    # Get the model schema for documentation
-    schema = EntityMove.model_json_schema()
-
-    # Action description for templates
-    action_info = {
-        "name": "Move Entity",
-        "description": "Move a game entity to an absolute position defined by x and y coordinates.",
-        "method": "POST",
-        "endpoint": "/actions/move_entity/",
-        "parameters": [
-            {
-                "name": "entity_name",
-                "type": "string",
-                "description": "Unique identifier of the entity to move",
-                "required": True,
-            },
-            {
-                "name": "x",
-                "type": "number",
-                "description": "Target X coordinate",
-                "required": True,
-            },
-            {
-                "name": "y",
-                "type": "number",
-                "description": "Target Y coordinate",
-                "required": True,
-            },
-        ],
-        "example": json.dumps({"entity_name": "player", "x": 100, "y": 200}, indent=2),
-    }
-
-    # Return appropriate response based on format
-    if format == Format.JSON:
-        return JSONResponse(content=schema)
-    elif format == Format.MARKDOWN:
-        return templates.TemplateResponse(
-            "action.md",
-            {"request": request, "action": action_info},
-            media_type="text/markdown",
-        )
-    else:  # Default to HTML
-        return templates.TemplateResponse(
-            "action.html",
-            {"request": request, "action": action_info},
-        )

@@ -9,12 +9,17 @@ class Format(str, Enum):
     HTML = "html"
     JSON = "json"
     MARKDOWN = "md"
+    RAW = "raw"
+    YAML = "yaml"
+    XML = "xml"
 
 
 # Create a dependency for format determination
 def FormatDependency(
     request: Request,
-    format: str = Query(None, description="Response format (html, json, md)"),
+    format: str = Query(
+        None, description="Response format (html, json, md, raw, yaml, xml)"
+    ),
 ) -> Format:
     """
     FastAPI dependency that determines the response format based on
@@ -28,7 +33,13 @@ def FormatDependency(
         return Format.JSON
     elif "text/markdown" in accept_header:
         return Format.MARKDOWN
-    return Format.HTML  # Default format
+    elif "application/yaml" in accept_header or "text/yaml" in accept_header:
+        return Format.YAML
+    elif "application/xml" in accept_header or "text/xml" in accept_header:
+        return Format.XML
+    elif "text/html" in accept_header:
+        return Format.HTML
+    return Format.RAW  # Default format changes to RAW
 
 
 # Create a type alias for the annotated dependency

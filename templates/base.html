@@ -9,7 +9,12 @@
         <link rel="stylesheet" href="/static/highlight.min.css">
         <script src="/static/highlight.min.js"></script>
         <script src="/static/htmx.min.js"></script>
-        <script>hljs.highlightAll();</script>
+        <!-- Initial highlight for page load -->
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                hljs.highlightAll();
+            });
+        </script>
     </head>
 
     <body>
@@ -22,13 +27,27 @@
                     <li>
                         <a href="/home">Home</a>
                     </li>
-                    <li>
-                        <a href="/users">Users</a>
-                    </li>
                 </ul>
             </nav>
         </header>
         {% block content %}
         {% endblock content %}
+
+        <!-- HTMX event listeners for dynamic content -->
+        <script>
+            // Re-run highlighting when htmx content is loaded
+            document.body.addEventListener('htmx:afterSwap', function(event) {
+                // Find all code blocks in the swapped content and highlight them
+                const codeBlocks = event.detail.elt.querySelectorAll('pre code');
+                codeBlocks.forEach(block => {
+                    hljs.highlightElement(block);
+                });
+            });
+            
+            // Also handle initial load of htmx content 
+            document.body.addEventListener('htmx:load', function() {
+                hljs.highlightAll();
+            });
+        </script>
     </body>
 </html>

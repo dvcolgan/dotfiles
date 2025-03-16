@@ -146,7 +146,7 @@ class FileModel(BaseModel):
         else:
             rel_path = path_str
 
-        return f"/users/{username}/{rel_path}"
+        return f"/home/{username}/{rel_path}"
 
 
 class TextFileModel(FileModel):

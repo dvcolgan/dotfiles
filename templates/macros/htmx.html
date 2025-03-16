@@ -1,6 +1,6 @@
 {% macro hx_get(url, trigger="revealed", target="this", swap="innerHTML", indicator_classes="spinner") %}
   <div class="htmx-lazy-load"
-       hx-get="{{ url }}?format=htmx"
+       hx-get="{{ url }}?format=html"
        hx-trigger="{{ trigger }}"
        hx-target="{{ target }}"
        hx-swap="{{ swap }}"
